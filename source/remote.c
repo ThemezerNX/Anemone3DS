@@ -37,6 +37,7 @@
 #include "urls.h"
 #include "conversion.h"
 #include "ui_strings.h"
+#include "sprites.h"
 
 char *last_search = NULL;
 json_int_t last_page = 1;
@@ -51,6 +52,7 @@ static const char * remote_provider_names[REMOTE_PROVIDER_AMOUNT] = {
 static Result http_get_with_not_found_flag(const char * url, char ** filename, char ** buf, u32 * size, InstallType install_type, const char * acceptable_mime_types, bool not_found_is_error);
 static bool mime_type_is_acceptable(const char *acceptable_mime_types, const char *mime_type);
 static bool remote_browser(RemoteMode mode, RemoteProvider provider);
+static void restart_remote_icon_loader_if_needed(Entry_List_s * list, RemoteProvider provider);
 
 static u32 next_or_equal_power_of_2(u32 v)
 {
@@ -77,34 +79,89 @@ bool is_remote_provider_v2(RemoteProvider provider)
     return provider != REMOTE_PROVIDER_THEMEPLAZA;
 }
 
+static void draw_remote_provider_card(RemoteProvider provider, float x, float y, bool selected)
+{
+    const float width = 144.0f;
+    const float height = 96.0f;
+    const float icon_x = x + 48.0f;
+    const float icon_y = y + 8.0f;
+    const Color border = selected ? colors[COLOR_ACCENT] : C2D_Color32(68, 68, 68, 255);
+    const Color fill = selected ? C2D_Color32(35, 35, 35, 235) : C2D_Color32(20, 20, 20, 220);
+    const int icon_id = provider == REMOTE_PROVIDER_THEMEPLAZA ? sprites_themeplaza_icon_idx : sprites_themezer_icon_idx;
+
+    C2D_DrawRectSolid(x - 2, y - 2, 0.55f, width + 4, height + 4, border);
+    C2D_DrawRectSolid(x, y, 0.56f, width, height, fill);
+    draw_image(icon_id, icon_x, icon_y);
+
+    const char * label = provider == REMOTE_PROVIDER_THEMEPLAZA ? "Theme Plaza" : "Themezer";
+    const float label_y = y + 66.0f;
+    float label_width = 0.0f;
+    get_text_dimensions(label, 0.62f, 0.62f, &label_width, NULL);
+    const float label_x = x + ((width - label_width) / 2.0f);
+
+    draw_text(label_x - 1.0f, label_y, 0.7f, 0.62f, 0.62f, colors[COLOR_BACKGROUND], label);
+    draw_text(label_x + 1.0f, label_y, 0.7f, 0.62f, 0.62f, colors[COLOR_BACKGROUND], label);
+    draw_text(label_x, label_y - 1.0f, 0.7f, 0.62f, 0.62f, colors[COLOR_BACKGROUND], label);
+    draw_text(label_x, label_y + 1.0f, 0.7f, 0.62f, 0.62f, colors[COLOR_BACKGROUND], label);
+    draw_text(label_x, label_y, 0.7f, 0.62f, 0.62f, colors[COLOR_WHITE_BACKGROUND], label);
+}
+
 bool select_remote_provider(RemoteProvider * provider)
 {
     if (provider == NULL)
         return false;
 
-    char numbuf[2] = { 0 };
-    SwkbdState swkbd;
-    swkbdInit(&swkbd, SWKBD_TYPE_NUMPAD, 1, 1);
-    swkbdSetHintText(&swkbd, "1: ThemePlaza  2: Themezer");
-    swkbdSetButton(&swkbd, SWKBD_BUTTON_LEFT, language.main.cancel, false);
-    swkbdSetButton(&swkbd, SWKBD_BUTTON_RIGHT, "OK", true);
-    swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, 0, 1);
+    RemoteProvider current = *provider;
+    if (current >= REMOTE_PROVIDER_AMOUNT)
+        current = REMOTE_PROVIDER_THEMEPLAZA;
 
-    SwkbdButton button = swkbdInputText(&swkbd, numbuf, sizeof(numbuf));
-    if (button != SWKBD_BUTTON_CONFIRM)
-        return false;
-
-    switch (numbuf[0])
+    while (aptMainLoop())
     {
-        case '1':
-            *provider = REMOTE_PROVIDER_THEMEPLAZA;
-            return true;
-        case '2':
-            *provider = REMOTE_PROVIDER_THEMEZER;
-            return true;
-        default:
+        hidScanInput();
+        u32 kDown = hidKeysDown();
+
+        if (kDown & KEY_B)
             return false;
+
+        if (kDown & (KEY_LEFT | KEY_L))
+            current = REMOTE_PROVIDER_THEMEPLAZA;
+        else if (kDown & (KEY_RIGHT | KEY_R))
+            current = REMOTE_PROVIDER_THEMEZER;
+        else if (kDown & KEY_TOUCH)
+        {
+            touchPosition touch = { 0 };
+            hidTouchRead(&touch);
+
+            if (BETWEEN(14, touch.px, 158) && BETWEEN(78, touch.py, 174))
+            {
+                *provider = REMOTE_PROVIDER_THEMEPLAZA;
+                return true;
+            }
+            else if (BETWEEN(166, touch.px, 310) && BETWEEN(78, touch.py, 174))
+            {
+                *provider = REMOTE_PROVIDER_THEMEZER;
+                return true;
+            }
+        }
+
+        if (kDown & KEY_A)
+        {
+            *provider = current;
+            return true;
+        }
+
+        draw_base_interface();
+        draw_text_center(GFX_TOP, 98, 0.5f, 0.8f, 0.8f, colors[COLOR_WHITE_BACKGROUND], "Select a source");
+        draw_text_center(GFX_TOP, 126, 0.5f, 0.62f, 0.62f, colors[COLOR_WHITE_BACKGROUND], "\uE000 Select   \uE001 Cancel");
+
+        set_screen(bottom);
+        draw_remote_provider_card(REMOTE_PROVIDER_THEMEPLAZA, 14, 78, current == REMOTE_PROVIDER_THEMEPLAZA);
+        draw_remote_provider_card(REMOTE_PROVIDER_THEMEZER, 166, 78, current == REMOTE_PROVIDER_THEMEZER);
+
+        end_frame();
     }
+
+    return false;
 }
 
 bool browse_remote_provider(RemoteProvider provider, RemoteMode mode)
@@ -117,6 +174,12 @@ bool browse_remote_provider(RemoteProvider provider, RemoteMode mode)
     default:
         return false;
     }
+}
+
+static void restart_remote_icon_loader_if_needed(Entry_List_s * list, RemoteProvider provider)
+{
+    if (is_remote_provider_v2(provider))
+    remote_v2_start_icon_thread(list, false);
 }
 
 static void free_icons(Entry_List_s * list)
@@ -259,6 +322,17 @@ static void load_remote_list(Entry_List_s * list, json_int_t page, RemoteMode mo
 
     if (json_len)
     {
+        if (loading_cancel_requested())
+        {
+            free_remote_entries(list);
+            free(list->entries);
+            list->entries = NULL;
+            list->entries_count = 0;
+            list->entries_loaded = 0;
+            free(page_json);
+            return;
+        }
+
         list->tp_current_page = page;
         list->mode = (EntryMode) mode;
         list->remote_provider = provider;
@@ -276,6 +350,18 @@ static void load_remote_list(Entry_List_s * list, json_int_t page, RemoteMode mo
         }
         else
             DEBUG("json error on line %d: %s\n", error.line, error.text);
+
+        if (loading_cancel_requested())
+        {
+            free_remote_entries(list);
+            free(list->entries);
+            list->entries = NULL;
+            list->entries_count = 0;
+            list->entries_loaded = 0;
+            json_decref(root);
+            free(page_json);
+            return;
+        }
 
         json_decref(root);
 
@@ -399,7 +485,6 @@ static Result load_remote_bgm(const Entry_s * entry, char ** bgm_ogg, u32 * bgm_
         free(bgm_url);
         if (R_FAILED(res))
             return res;
-        // if bgm doesn't exist on the server
         if (R_SUMMARY(res) == RS_NOTFOUND && R_MODULE(res) == RM_FILE_SERVER)
             return res;
 
@@ -740,6 +825,8 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
         toggle_preview:
             if (!preview_mode)
             {
+                if (is_remote_provider_v2(provider))
+                    remote_v2_stop_icon_thread();
                 u32 height = mode == REMOTE_MODE_BADGES ? 1024 : 480;
                 preview_mode = load_remote_preview(current_entry, &preview, &preview_offset, height);
                 if (mode == REMOTE_MODE_THEMES && dspfirm)
@@ -772,6 +859,7 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
                     }
                     if (audio != NULL) play_audio_ogg(audio);
                 }
+                restart_remote_icon_loader_if_needed(current_list, provider);
             }
             else
             {
@@ -802,7 +890,10 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
 
         if (kDown & KEY_A)
         {
+            if (is_remote_provider_v2(provider))
+                remote_v2_stop_icon_thread();
             download_remote_entry(current_entry, mode, provider);
+            restart_remote_icon_loader_if_needed(current_list, provider);
             downloaded = true;
         }
         else if (kDown & KEY_X)
@@ -898,7 +989,10 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
                     }
                     else if (BETWEEN(26, x, 50))
                     {
+                        if (is_remote_provider_v2(provider))
+                            remote_v2_stop_icon_thread();
                         download_remote_entry(current_entry, mode, provider);
+                        restart_remote_icon_loader_if_needed(current_list, provider);
                         downloaded = true;
                     }
                 }
@@ -1124,6 +1218,42 @@ Result http_get(const char * url, char ** filename, char ** buf, u32 * size, Ins
 /* 
  * curl functions modified from Universal-Updater download.cpp
  */
+typedef struct {
+    void *soc_buffer;
+    CURL *handle;
+} curl_session;
+
+static curl_session fallback_curl_session = {0};
+
+static bool init_fallback_curl_session(void)
+{
+    if (fallback_curl_session.handle != NULL)
+        return true;
+
+    fallback_curl_session.soc_buffer = memalign(0x1000, 0x100000);
+    if (fallback_curl_session.soc_buffer == NULL)
+        return false;
+
+    Result ret = socInit((u32 *)fallback_curl_session.soc_buffer, 0x100000);
+    if (R_FAILED(ret))
+    {
+        free(fallback_curl_session.soc_buffer);
+        fallback_curl_session.soc_buffer = NULL;
+        return false;
+    }
+
+    fallback_curl_session.handle = curl_easy_init();
+    if (fallback_curl_session.handle == NULL)
+    {
+        socExit();
+        free(fallback_curl_session.soc_buffer);
+        fallback_curl_session.soc_buffer = NULL;
+        return false;
+    }
+
+    return true;
+}
+
 static size_t handle_data(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
     curl_data *data = (curl_data *) userdata;
@@ -1228,26 +1358,18 @@ static bool mime_type_is_acceptable(const char *acceptable_mime_types, const cha
     return false;
 }
 
-static int64_t curl_http_get(const char * url, char ** out_filename, char ** buf, u32 * size, const char * acceptable_mime_types)
+Result curl_http_get(const char * url, char ** out_filename, char ** buf, u32 * size, const char * acceptable_mime_types)
 {
     DEBUG("attempting curl_http_get\n");
     curl_data data = {0};
     curl_header header = {0};
-    void *socubuf = memalign(0x1000, 0x100000);
-    if (!socubuf)
+    if (!init_fallback_curl_session())
     {
         return -1;
     }
 
-    Result ret = socInit((u32 *) socubuf, 0x100000);
-    if (R_FAILED(ret))
-    {
-        free(socubuf);
-        return ret;
-    }
-
-    CURL *handle;
-    handle = curl_easy_init();
+    CURL *handle = fallback_curl_session.handle;
+    curl_easy_reset(handle);
 
     curl_easy_setopt(handle, CURLOPT_BUFFERSIZE, 102400L);
     curl_easy_setopt(handle, CURLOPT_URL, url);
@@ -1256,6 +1378,9 @@ static int64_t curl_http_get(const char * url, char ** out_filename, char ** buf
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(handle, CURLOPT_MAXREDIRS, 50L);
     curl_easy_setopt(handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
+    curl_easy_setopt(handle, CURLOPT_FRESH_CONNECT, 0L);
+    curl_easy_setopt(handle, CURLOPT_FORBID_REUSE, 0L);
+    curl_easy_setopt(handle, CURLOPT_TCP_KEEPALIVE, 1L);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, handle_data);
     // curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0L);
     curl_easy_setopt(handle, CURLOPT_VERBOSE, 1L);
@@ -1272,17 +1397,16 @@ static int64_t curl_http_get(const char * url, char ** out_filename, char ** buf
     curl_easy_setopt(handle, CURLOPT_HTTPHEADER, list);
 
     CURLcode cres = curl_easy_perform(handle);
-    curl_easy_cleanup(handle);
+    curl_easy_reset(handle);
     char *newbuf = (char *) realloc(data.result_buf, data.result_written + 1);
     data.result_buf = newbuf;
     data.result_buf[data.result_written] = 0;
     if (cres != CURLE_OK)
     {
-        socExit();
         free(data.result_buf);
-        free(socubuf);
         if (header.mime_type) free(header.mime_type);
         if (header.filename) free(header.filename);
+        if (list) curl_slist_free_all(list);
         return -1;
     }
     
@@ -1292,11 +1416,10 @@ static int64_t curl_http_get(const char * url, char ** out_filename, char ** buf
     {
         if (!mime_type_is_acceptable(acceptable_mime_types, header.mime_type))
         {
-            socExit();
             free(data.result_buf);
-            free(socubuf);
             if (header.mime_type) free(header.mime_type);
             if (header.filename) free(header.filename);
+            if (list) curl_slist_free_all(list);
             return -2;
         }
     } 
@@ -1334,10 +1457,9 @@ static int64_t curl_http_get(const char * url, char ** out_filename, char ** buf
     *buf = data.result_buf;
     *size = data.result_written;
 
-    socExit();
     if (header.mime_type) free(header.mime_type);
     if (header.filename) free(header.filename);
-    free(socubuf);
+    if (list) curl_slist_free_all(list);
 
     return 0;
 }
@@ -1551,6 +1673,16 @@ no_error:;
 
     do
     {
+        hidScanInput();
+        if (install_type == INSTALL_LOADING_REMOTE_THEMES && (hidKeysDown() & KEY_B))
+        {
+            httpcCloseContext(&context);
+            free(*buf);
+            *buf = NULL;
+            *size = 0;
+            return MAKERESULT(RL_TEMPORARY, RS_CANCELED, RM_APPLICATION, RD_CANCEL_REQUESTED);
+        }
+
         new_buf = realloc(*buf, *size + chunk_size);
         if (new_buf == NULL)
         {

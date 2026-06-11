@@ -58,6 +58,9 @@ static void load_remote_smdh(Entry_s * entry, C3D_Tex * into_tex, const Entry_Ic
 
 void remote_legacy_load_entries(Entry_List_s * list, json_t * ids_array, bool ignore_cache, InstallType type)
 {
+    if (loading_cancel_requested())
+        return;
+
     free_remote_entries(list);
     free(list->entries);
     list->entries_count = json_array_size(ids_array);
@@ -68,6 +71,9 @@ void remote_legacy_load_entries(Entry_List_s * list, json_t * ids_array, bool ig
     json_t * id = NULL;
     json_array_foreach(ids_array, i, id)
     {
+        if (loading_cancel_requested())
+            return;
+
         draw_loading_bar(i, list->entries_count, type);
         Entry_s * current_entry = &list->entries[i];
         current_entry->tp_download_id = json_integer_value(id);
@@ -88,6 +94,9 @@ void remote_legacy_handle_page_json(Entry_List_s * list, json_t * root, json_int
 
     json_object_foreach(root, key, value)
     {
+        if (loading_cancel_requested())
+            return;
+
         if (json_is_true(value) && !strcmp(key, THEMEPLAZA_JSON_SUCCESS))
             last_page = page;
         else if (json_is_integer(value) && !strcmp(key, THEMEPLAZA_JSON_PAGE_COUNT))

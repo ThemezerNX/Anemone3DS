@@ -214,6 +214,11 @@ void exit_screens(void);
 void start_frame(void);
 void end_frame(void);
 void set_screen(C3D_RenderTarget * screen);
+void draw_image_tint(int image_id, float x, float y, C2D_ImageTint tint);
+void draw_image(int image_id, float x, float y);
+void get_text_dimensions(const char * text, float scaleX, float scaleY, float * width, float * height);
+void set_loading_cancel_requested(bool requested);
+bool loading_cancel_requested(void);
 
 void throw_error(const char * error, ErrorLevel level);
 bool draw_confirm(const char * conf_msg, Entry_List_s * list, DrawMode draw_mode);

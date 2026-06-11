@@ -41,6 +41,7 @@ static C2D_TextBuf widthBuf;
 
 static C2D_SpriteSheet spritesheet;
 static C2D_Sprite sprite_shuffle, sprite_shuffle_no_bgm, sprite_installed, sprite_start, sprite_select;
+static bool cancel_requested = false;
 
 C2D_Text text[TEXT_AMOUNT];
 static const char * mode_switch_char[MODE_AMOUNT] = {
@@ -181,12 +182,22 @@ void end_frame(void)
     C3D_FrameEnd(0);
 }
 
-static void draw_image_tint(int image_id, float x, float y, C2D_ImageTint tint)
+void set_loading_cancel_requested(bool requested)
+{
+    cancel_requested = requested;
+}
+
+bool loading_cancel_requested(void)
+{
+    return cancel_requested;
+}
+
+void draw_image_tint(int image_id, float x, float y, C2D_ImageTint tint)
 {
     C2D_DrawImageAt(C2D_SpriteSheetGetImage(spritesheet, image_id), x, y, 0.6f, &tint, 1.0f, 1.0f);
 }
 
-static void draw_image(int image_id, float x, float y)
+void draw_image(int image_id, float x, float y)
 {
     C2D_DrawImageAt(C2D_SpriteSheetGetImage(spritesheet, image_id), x, y, 0.6f, NULL, 1.0f, 1.0f);
 }
@@ -200,7 +211,7 @@ void draw_home(u64 start_time, u64 cur_time)
     C2D_DrawImageAt(C2D_SpriteSheetGetImage(spritesheet, sprites_no_home_idx), (320-64)/2, (240-64)/2, 1.0f, &tint, 1.0f, 1.0f);
 }
 
-static void get_text_dimensions(const char * text, float scaleX, float scaleY, float * width, float * height)
+void get_text_dimensions(const char * text, float scaleX, float scaleY, float * width, float * height)
 {
     C2D_Text c2d_text;
     C2D_TextParse(&c2d_text, widthBuf, text);
@@ -395,11 +406,15 @@ static void draw_install_handler(InstallType type)
     {
         C2D_Text * install_text = &text[type];
         draw_c2d_text_center(GFX_TOP, 120.0f, 0.5f, 0.8f, 0.8f, colors[COLOR_WHITE_BACKGROUND], install_text);
+
+        if(type == INSTALL_LOADING_REMOTE_THEMES)
+            draw_text_center(GFX_TOP, 168.0f, 0.5f, 0.55f, 0.55f, colors[COLOR_WHITE_BACKGROUND], "Press \uE001 to cancel");
     }
 }
 
 void draw_install(InstallType type)
 {
+    set_loading_cancel_requested(false);
     draw_base_interface();
     draw_install_handler(type);
     end_frame();
@@ -407,6 +422,13 @@ void draw_install(InstallType type)
 
 void draw_loading_bar(u32 current, u32 max, InstallType type)
 {
+    if(type == INSTALL_LOADING_REMOTE_THEMES)
+    {
+        hidScanInput();
+        if(hidKeysDown() & KEY_B)
+            set_loading_cancel_requested(true);
+    }
+
     draw_base_interface();
     draw_install_handler(type);
     set_screen(bottom);

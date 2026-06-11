@@ -53,181 +53,35 @@ static void * remote_v2_icon_thread_args[1] = {0};
 static Handle remote_v2_icon_texture_mutex = 0;
 
 typedef struct {
-    char *result_buf;
-    size_t result_written;
-    size_t result_sz;
-} RemoteV2_CurlData_s;
-
-typedef struct {
-    char *mime_type;
-} RemoteV2_CurlHeader_s;
-
-typedef struct {
     void *soc_buffer;
     CURL *curl;
     struct curl_slist *headers;
 } RemoteV2_IconHttpSession_s;
 
-static size_t remote_v2_handle_data(char * ptr, size_t size, size_t nmemb, void * userdata)
-{
-    RemoteV2_CurlData_s * data = (RemoteV2_CurlData_s *)userdata;
-    const size_t buffer_size = size * nmemb;
-
-    if (data->result_sz == 0 || data->result_buf == NULL)
-    {
-        data->result_sz = 0x1000;
-        data->result_buf = malloc(data->result_sz);
-    }
-
-    bool need_realloc = false;
-    while (data->result_written + buffer_size > data->result_sz)
-    {
-        data->result_sz <<= 1;
-        need_realloc = true;
-    }
-
-    if (need_realloc)
-    {
-        char * new_buf = realloc(data->result_buf, data->result_sz);
-        if (new_buf == NULL)
-            return 0;
-        data->result_buf = new_buf;
-    }
-
-    memcpy(data->result_buf + data->result_written, ptr, buffer_size);
-    data->result_written += buffer_size;
-    return buffer_size;
-}
-
-static size_t remote_v2_parse_header(char * buffer, size_t size, size_t nitems, void * userdata)
-{
-    RemoteV2_CurlHeader_s * header = (RemoteV2_CurlHeader_s *)userdata;
-    const size_t len = size * nitems;
-
-    for (size_t i = 0; i < len; ++i)
-    {
-        if (buffer[i] == '\n' || buffer[i] == '\r')
-        {
-            buffer[i] = '\0';
-            break;
-        }
-    }
-
-    if (!strncmp(buffer, "Content-Type: ", 14))
-    {
-        free(header->mime_type);
-        header->mime_type = malloc(strlen(buffer) - 13);
-        if (header->mime_type != NULL)
-        {
-            strncpy(header->mime_type, buffer + 14, strlen(buffer) - 14);
-            header->mime_type[strlen(buffer) - 14] = '\0';
-        }
-    }
-
-    return len;
-}
-
-static bool remote_v2_icon_mime_ok(const char * mime_type)
-{
-    if (mime_type == NULL)
-        return true;
-
-    size_t mime_len = strcspn(mime_type, "; \t\r\n");
-    return mime_len == strlen("image/png") && !strncasecmp(mime_type, "image/png", mime_len);
-}
-
 static bool remote_v2_icon_http_session_init(RemoteV2_IconHttpSession_s * session)
 {
-    memset(session, 0, sizeof(*session));
-
-    DEBUG("remote_v2: icon HTTP session init\n");
-
-    session->soc_buffer = memalign(0x1000, 0x100000);
-    if (session->soc_buffer == NULL)
-        return false;
-
-    Result soc_res = socInit((u32 *)session->soc_buffer, 0x100000);
-    if (R_FAILED(soc_res))
-    {
-        free(session->soc_buffer);
-        session->soc_buffer = NULL;
-        return false;
-    }
-
-    session->curl = curl_easy_init();
-    if (session->curl == NULL)
-    {
-        socExit();
-        free(session->soc_buffer);
-        session->soc_buffer = NULL;
-        return false;
-    }
-
-    session->headers = curl_slist_append(NULL, "Accept:image/png");
-
-    curl_easy_setopt(session->curl, CURLOPT_BUFFERSIZE, 102400L);
-    curl_easy_setopt(session->curl, CURLOPT_NOPROGRESS, 1L);
-    curl_easy_setopt(session->curl, CURLOPT_USERAGENT, USER_AGENT);
-    curl_easy_setopt(session->curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(session->curl, CURLOPT_MAXREDIRS, 50L);
-    curl_easy_setopt(session->curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
-    curl_easy_setopt(session->curl, CURLOPT_VERBOSE, 0L);
-    curl_easy_setopt(session->curl, CURLOPT_HTTPHEADER, session->headers);
-
+    (void)session;
     return true;
 }
 
 static void remote_v2_icon_http_session_cleanup(RemoteV2_IconHttpSession_s * session)
 {
-    if (session->curl != NULL)
-        curl_easy_cleanup(session->curl);
-    if (session->headers != NULL)
-        curl_slist_free_all(session->headers);
-    if (session->soc_buffer != NULL)
-    {
-        socExit();
-        free(session->soc_buffer);
-    }
+    (void)session;
 }
 
 static bool remote_v2_fetch_icon_png(RemoteV2_IconHttpSession_s * session, const char * url, char ** icon_png, u32 * icon_size, u64 start_ms)
 {
-    RemoteV2_CurlData_s data = {0};
-    RemoteV2_CurlHeader_s header = {0};
-    long response_code = 0;
-
-    *icon_png = NULL;
-    *icon_size = 0;
+    (void)session;
 
     remote_v2_debug_elapsed(start_ms, "icon fetch start %s\n", url);
-
-    curl_easy_setopt(session->curl, CURLOPT_URL, url);
-    curl_easy_setopt(session->curl, CURLOPT_WRITEFUNCTION, remote_v2_handle_data);
-    curl_easy_setopt(session->curl, CURLOPT_WRITEDATA, &data);
-    curl_easy_setopt(session->curl, CURLOPT_HEADERFUNCTION, remote_v2_parse_header);
-    curl_easy_setopt(session->curl, CURLOPT_HEADERDATA, &header);
-
-    CURLcode curl_res = curl_easy_perform(session->curl);
-    if (curl_res == CURLE_OK)
-        curl_easy_getinfo(session->curl, CURLINFO_RESPONSE_CODE, &response_code);
-
-    if (curl_res != CURLE_OK || response_code < 200 || response_code >= 300 || !remote_v2_icon_mime_ok(header.mime_type))
+    Result res = curl_http_get(url, NULL, icon_png, icon_size, "image/png");
+    if (R_FAILED(res))
     {
-        remote_v2_debug_elapsed(start_ms, "icon fetch failed %s (curl=%d, http=%ld, mime=%s)\n", url, curl_res, response_code, header.mime_type ? header.mime_type : "(null)");
-        free(data.result_buf);
-        free(header.mime_type);
+        remote_v2_debug_elapsed(start_ms, "icon fetch failed %s (res=%08lx)\n", url, res);
         return false;
     }
 
-    char * resized = realloc(data.result_buf, data.result_written + 1);
-    if (resized != NULL)
-        data.result_buf = resized;
-    data.result_buf[data.result_written] = 0;
-
-    *icon_png = data.result_buf;
-    *icon_size = data.result_written;
-    remote_v2_debug_elapsed(start_ms, "icon fetch end %s (%zu bytes)\n", url, data.result_written);
-    free(header.mime_type);
+    remote_v2_debug_elapsed(start_ms, "icon fetch end %s (%lu bytes)\n", url, *icon_size);
     return true;
 }
 
@@ -454,6 +308,9 @@ void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool igno
 {
     (void)ignore_cache;
 
+    if (loading_cancel_requested())
+        return;
+
     free_remote_entries(list);
     free(list->entries);
     list->entries_count = json_array_size(items_array);
@@ -464,6 +321,9 @@ void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool igno
     json_t * item = NULL;
     json_array_foreach(items_array, i, item)
     {
+        if (loading_cancel_requested())
+            return;
+
         draw_loading_bar(i, list->entries_count, type);
 
         if (!json_is_object(item))
@@ -512,6 +372,9 @@ void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t p
 
     json_object_foreach(root, key, value)
     {
+        if (loading_cancel_requested())
+            return;
+
         if (json_is_integer(value) && !strcmp(key, THEMEZER_JSON_PAGE_COUNT))
             list->tp_page_count = json_integer_value(value);
         else if (json_is_array(value) && !strcmp(key, THEMEZER_JSON_PAGE_ITEMS))
