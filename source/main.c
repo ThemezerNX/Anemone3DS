@@ -43,7 +43,6 @@ static bool homebrew = false;
 static bool installed_themes = false;
 bool home_displayed = false;
 u64 time_home_pressed = 0;
-
 static Thread iconLoadingThread = {0};
 static Thread_Arg_s iconLoadingThread_arg = {0};
 static Handle update_icons_mutex;
@@ -511,14 +510,39 @@ int main(void)
                         goto switch_mode;
                     } else if(BETWEEN(320-48, x, 320-24))
                     {
-                        quit = true;
-                        continue;
+                        switch(current_mode)
+                        {
+                            case MODE_THEMES:
+                                if(draw_confirm_no_interface(language.main.uninstall_theme_confirm))
+                                {
+                                    draw_install(INSTALL_THEME_UNINSTALL);
+                                    if(R_SUCCEEDED(theme_uninstall()))
+                                        installed_themes = false;
+                                }
+                                break;
+                            case MODE_SPLASHES:
+                                if(draw_confirm_no_interface(language.main.uninstall_confirm))
+                                {
+                                    draw_install(INSTALL_SPLASH_DELETE);
+                                    splash_delete();
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     } else if(BETWEEN(320-72, x, 320-48))
                     {
-                        goto browse_themeplaza;
+                        goto enable_qr;
                     } else if(BETWEEN(320-96, x, 320-72))
                     {
-                        goto enable_qr;
+                        if(themeplaza_browser((RemoteMode) current_mode))
+                        {
+                            current_mode = MODE_THEMES;
+                            load_lists(lists);
+                        }
+                        extra_mode = false;
+                        draw_mode = DRAW_MODE_LIST;
+                        extra_index = 1;
                     }
                 }
             }
@@ -764,32 +788,30 @@ int main(void)
                 {
                     if (y < 24)
                     {
-                        if (BETWEEN(320-24, x, 320))
+                        if (toolbar_hit(x, y, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y))
                         {
-                            goto browse_themeplaza;
-                        } else if (BETWEEN(320-48, x, 320-24))
+                            extra_index = 0;
+                        }
+                        else if (BETWEEN(TOOLBAR_EXTRA_BADGE_X, x, TOOLBAR_EXTRA_FILTER_X))
                         {
-                            goto dump_single;
-                        } else if (BETWEEN(320-72, x, 320-48))
+                            load_icons_first(current_list, false);
+                            extra_mode = false;
+                            draw_mode = DRAW_MODE_LIST;
+                            extra_index = 1;
+                        }
+                        else if (BETWEEN(TOOLBAR_EXTRA_FILTER_X, x, TOOLBAR_EXTRA_DUMP_X))
                         {
-                            switch (current_list->current_sort)
-                            {
-                                case SORT_NAME:
-                                    goto sort_author;
-                                    break;
-                                case SORT_AUTHOR:
-                                    goto sort_path;
-                                    break;
-                                case SORT_PATH:
-                                    goto sort_name;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        } else if (BETWEEN(320-96, x, 320-72))
+                            extra_index = 2;
+                        }
+                        else if (BETWEEN(TOOLBAR_EXTRA_DUMP_X, x, 320))
                         {
-                            goto badge_install;
-                        } else if (BETWEEN(2, x, 26))
+                            extra_mode = false;
+                            extra_index = 1;
+                            draw_mode = DRAW_MODE_LIST;
+                            draw_install(INSTALL_BADGES);
+                            install_badges();
+                        }
+                        else if (BETWEEN(2, x, 26))
                         {
                             extra_mode = false;
                             extra_index = 1;
@@ -805,26 +827,9 @@ int main(void)
                     extra_mode = false;
                     draw_mode = DRAW_MODE_LIST;
                 }
-                else if(kDown & KEY_DLEFT)
-                {
-                    browse_themeplaza:
-                    if(themeplaza_browser((RemoteMode) current_mode))
-                    {
-                        current_mode = MODE_THEMES;
-                        load_lists(lists);
-                    }
-                    extra_mode = false;
-                    draw_mode = DRAW_MODE_LIST;
-                    extra_index = 1;
-                }
                 else if(kDown & KEY_DUP)
                 {
-                    jump:
-                    jump_menu(current_list);
-                    extra_mode = false;
-                    draw_mode = DRAW_MODE_LIST;
-                    extra_index = 1;
-
+                    extra_index = 0;
                 }
                 else if(kDown & KEY_DDOWN)
                 {
@@ -832,6 +837,10 @@ int main(void)
                     extra_mode = false;
                     draw_mode = DRAW_MODE_LIST;
                     extra_index = 1;
+                }
+                else if(kDown & KEY_DLEFT)
+                {
+                    extra_index = 2;
                 }
                 else if (kDown & KEY_DRIGHT)
                 {
@@ -842,13 +851,13 @@ int main(void)
                     draw_install(INSTALL_BADGES);
                     install_badges();
                 }
-                else if (kDown & KEY_R)
-                {
-                    extra_index = 2;
-                }
                 else if(kDown & KEY_L)
                 {
-                    extra_index = 0;
+                    jump:
+                    jump_menu(current_list);
+                    extra_mode = false;
+                    draw_mode = DRAW_MODE_LIST;
+                    extra_index = 1;
                 }
             }
             else if(extra_index == 0)
@@ -955,6 +964,22 @@ int main(void)
             switch(current_mode)
             {
                 case MODE_THEMES:
+                    extra_mode = true;
+                    draw_mode = DRAW_MODE_EXTRA;
+                    break;
+                case MODE_SPLASHES:
+                    extra_mode = true;
+                    draw_mode = DRAW_MODE_EXTRA;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if(kDown & KEY_X)
+        {
+            switch(current_mode)
+            {
+                case MODE_THEMES:
                     toggle_shuffle(current_list);
                     break;
                 case MODE_SPLASHES:
@@ -967,11 +992,6 @@ int main(void)
                 default:
                     break;
             }
-        }
-        else if(kDown & KEY_X)
-        {
-            extra_mode = true;
-            draw_mode = DRAW_MODE_EXTRA;
         }
         else if(kDown & KEY_SELECT)
         {
@@ -1042,58 +1062,100 @@ int main(void)
             {
                 if(y < 24)
                 {
-                    if(BETWEEN(320-144, x, 320-120))
-                    {
-                        if (current_mode == MODE_THEMES)
-                        {
-                            toggle_shuffle(current_list);
-                        }
-                    }
-                    else if(BETWEEN(2, x, 26))
+                    if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y))
                     {
                         extra_mode = true;
                         draw_mode = DRAW_MODE_EXTRA;
                     }
-                    else if(BETWEEN(320-120, x, 320-96))
-                    {
-                        if (current_mode == MODE_THEMES)
-                        {
-                            install_mode = true;
-                            draw_mode = DRAW_MODE_INSTALL;
-                        } else if (current_mode == MODE_SPLASHES)
-                        {
-                            draw_install(INSTALL_SPLASH);
-                            splash_install(current_entry);
-                            for(int i = 0; i < current_list->entries_count; i++)
-                            {
-                                Entry_s * splash = &current_list->entries[i];
-                                if(splash == current_entry)
-                                    splash->installed = true;
-                                else
-                                    splash->installed = false;
-                            }
-                        }
-                    }
-                    else if(BETWEEN(320-96, x, 320-72))
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
                     {
                         goto enable_qr;
                     }
-                    else if(BETWEEN(320-72, x, 320-48))
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
                     {
-                        quit = true;
+                        if(themeplaza_browser((RemoteMode) current_mode))
+                        {
+                            current_mode = MODE_THEMES;
+                            load_lists(lists);
+                        }
+                        extra_mode = false;
+                        draw_mode = DRAW_MODE_LIST;
+                        extra_index = 1;
                     }
-                    else if(BETWEEN(320-48, x, 320-24))
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y))
                     {
-                        goto toggle_preview;
+                        switch(current_mode)
+                        {
+                            case MODE_THEMES:
+                                if(draw_confirm(language.main.uninstall_theme_confirm, current_list, draw_mode))
+                                {
+                                    draw_install(INSTALL_THEME_UNINSTALL);
+                                    if(R_SUCCEEDED(theme_uninstall()))
+                                    {
+                                        installed_themes = false;
+                                        load_lists(lists);
+                                    }
+                                }
+                                break;
+                            case MODE_SPLASHES:
+                                if(draw_confirm(language.main.uninstall_confirm, current_list, draw_mode))
+                                {
+                                    draw_install(INSTALL_SPLASH_DELETE);
+                                    splash_delete();
+                                    load_lists(lists);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                    else if(BETWEEN(320-24, x, 320))
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MODE_X, TOOLBAR_TOP_Y))
                     {
                         goto switch_mode;
                     }
                 }
                 else if(y >= 216)
                 {
-                    if(current_list->entries != NULL && BETWEEN(arrowStartX, x, arrowEndX) && current_list->scroll > 0)
+                    if(toolbar_hit(x, y, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y))
+                    {
+                        goto toggle_preview;
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_MAIN_INSTALL_X, TOOLBAR_BOTTOM_Y))
+                    {
+                        switch(current_mode)
+                        {
+                            case MODE_THEMES:
+                                install_mode = true;
+                                draw_mode = DRAW_MODE_INSTALL;
+                                break;
+                            case MODE_SPLASHES:
+                                draw_install(INSTALL_SPLASH);
+                                splash_install(current_entry);
+                                for(int i = 0; i < current_list->entries_count; i++)
+                                {
+                                    Entry_s * splash = &current_list->entries[i];
+                                    if(splash == current_entry)
+                                        splash->installed = true;
+                                    else
+                                        splash->installed = false;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_MAIN_SECONDARY_X, TOOLBAR_BOTTOM_Y))
+                    {
+                        switch(current_mode)
+                        {
+                            case MODE_THEMES:
+                                toggle_shuffle(current_list);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else if(current_list->entries != NULL && BETWEEN(arrowStartX, x, arrowEndX) && current_list->scroll > 0)
                     {
                         change_selected(current_list, -current_list->entries_per_screen_v);
                     }

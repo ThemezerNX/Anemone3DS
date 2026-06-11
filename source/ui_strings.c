@@ -35,10 +35,10 @@ const Language_s language_english = {
             .instructions = {
                 {
                     "\uE000 Install Theme(s)",
-                    "\uE001 Queue shuffle theme"
+                    "\uE001 Open Menu"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Queue shuffle themes",
                     "\uE003 Preview theme"
                 },
                 {
@@ -46,8 +46,8 @@ const Language_s language_english = {
                     "\uE005 Scan QR code"
                 },
                 {
-                    "Exit",
-                    "Delete from SD"
+                    "Delete from SD",
+                    "Exit"
                 }
             }
         },
@@ -56,10 +56,10 @@ const Language_s language_english = {
             .instructions = {
                 {
                     "\uE000 Install splash",
-                    "\uE001 Delete installed splash"
+                    "\uE001 Open Menu"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Delete installed splash",
                     "\uE003 Preview splash"
                 },
                 {
@@ -67,8 +67,8 @@ const Language_s language_english = {
                     "\uE005 Scan QR code"
                 },
                 {
-                    "Exit",
-                    "Delete from SD"
+                    "Delete from SD",
+                    "Exit"
                 }
             }
         }
@@ -115,8 +115,8 @@ const Language_s language_english = {
                     NULL
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -124,20 +124,20 @@ const Language_s language_english = {
             .info_line = "\uE001 Leave extra menu",
             .instructions = {
                 {
-                    "\uE079 Jump in the list",
-                    "\uE07A Reload broken icons"
+                    "\uE079 Sorting menu",
+                    "\uE07A Reload icons"
                 },
                 {
-                    "\uE07B Browse ThemePlaza",
+                    "\uE07B Dumping menu",
                     "\uE07C Install Badges"
                 },
                 {
-                    "\uE004 Sorting menu",
-                    "\uE005 Dumping menu"
+                    "\uE004 Jump in the list",
+                    NULL
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -157,8 +157,8 @@ const Language_s language_english = {
                     NULL
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         }
@@ -198,7 +198,8 @@ const Language_s language_english = {
         .load_splash = "Loading splashes, please wait...",
         .load_icons = "Loading icons, please wait...",
         .install_splash = "Installing a splash...",
-        .delete_splash = "Deleting installed splash...",
+        .delete_splash = "Uninstalling installed splash...",
+        .delete_theme = "Uninstalling installed theme...",
         .install_theme = "Installing a single theme...",
         .install_shuffle = "Installing shuffle themes...",
         .install_bgm = "Installing BGM-only theme...",
@@ -246,7 +247,8 @@ const Language_s language_english = {
         .camera_broke = "Your camera seems to have a problem,\nunable to scan QR codes.",
         .too_many_themes = "You have too many themes selected.",
         .not_enough_themes = "You don't have enough themes selected.",
-        .uninstall_confirm = "Are you sure you would like to delete\nthe installed splash?",
+        .uninstall_confirm = "Are you sure you would like to uninstall\nthe installed splash?",
+        .uninstall_theme_confirm = "Are you sure you would like to uninstall\nthe installed theme?",
         .delete_confirm = "Are you sure you would like to delete this?",
     },
     .remote =
@@ -294,7 +296,7 @@ const Language_s language_english = {
                     "\uE001 Go back"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Filter",
                     "\uE003 Preview theme"
                 },
                 {
@@ -315,7 +317,7 @@ const Language_s language_english = {
                     "\uE001 Go back"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Filter",
                     "\uE003 Preview splash"
                 },
                 {
@@ -336,7 +338,7 @@ const Language_s language_english = {
                     "\uE001 Go back"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Filter",
                     "\uE003 Preview badges"
                 },
                 {
@@ -447,7 +449,7 @@ const Language_s language_spanish = {
                     "\uE001 Cola de temas aleatorios"
                 },
                 {
-                    "\uE002 Más opciones",
+                    "\uE002 Abrir menú",
                     "\uE003 Vista previa del tema"
                 },
                 {
@@ -455,8 +457,8 @@ const Language_s language_spanish = {
                     "\uE005 Escanear código QR"
                 },
                 {
-                    "Salir",
-                    "Eliminar de la SD"
+                    "Eliminar de la SD",
+                    "Salir"
                 }
             }
         },
@@ -465,10 +467,10 @@ const Language_s language_spanish = {
             .instructions = {
                 {
                     "\uE000 Instalar fondo",
-                    "\uE001 Eliminar fondo instalado"
+                    "\uE001 Abrir menú"
                 },
                 {
-                    "\uE002 Más opciones",
+                    "\uE002 Eliminar fondo instalado",
                     "\uE003 Vista previa del fondo"
                 },
                 {
@@ -476,8 +478,8 @@ const Language_s language_spanish = {
                     "\uE005 Escanear código QR"
                 },
                 {
-                    "Salir",
-                    "Eliminar de la SD"
+                    "Eliminar de la SD",
+                    "Salir"
                 }
             }
         }
@@ -524,8 +526,8 @@ const Language_s language_spanish = {
                     NULL
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         },
@@ -533,20 +535,20 @@ const Language_s language_spanish = {
             .info_line = "\uE001 Dejar menú extra",
             .instructions = {
                 {
-                    "\uE079 Saltar en la lista",
-                    "\uE07A Recargar iconos rotos"
+                    "\uE079 Menú de clasificación",
+                    "\uE07A Recargar iconos"
                 },
                 {
-                    "\uE07B Explorar ThemePlaza",
+                    "\uE07B Menú de volcado",
                     "\uE07C Instalar Insignias"
                 },
                 {
-                    "\uE004 Menú de clasificación",
-                    "\uE005 Menú de volcado"
+                    "\uE004 Saltar en la lista",
+                    NULL
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         },
@@ -566,8 +568,8 @@ const Language_s language_spanish = {
                     NULL
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         }
@@ -607,7 +609,8 @@ const Language_s language_spanish = {
         .load_splash = "Cargando fondos, por favor espera...",
         .load_icons = "Cargando iconos, por favor espera...",
         .install_splash = "Instalando fondo...",
-        .delete_splash = "Eliminando fondo instalado...",
+        .delete_splash = "Desinstalando fondo instalado...",
+        .delete_theme = "Desinstalando tema instalado...",
         .install_theme = "Instalando un solo tema...",
         .install_shuffle = "Instalando temas aleatorios...",
         .install_bgm = "Instalando tema solo BGM...",
@@ -655,7 +658,8 @@ const Language_s language_spanish = {
         .camera_broke = "Tu cámara parece tener un problema,\nno se pueden escanear códigos QR.",
         .too_many_themes = "Tienes demasiados temas seleccionados.",
         .not_enough_themes = "No tienes suficientes temas seleccionados.",
-        .uninstall_confirm = "¿Estás seguro de que deseas eliminar\nel fondo instalado?",
+        .uninstall_confirm = "¿Estás seguro de que deseas desinstalar\nel fondo instalado?",
+        .uninstall_theme_confirm = "¿Estás seguro de que deseas desinstalar\nel tema instalado?",
         .delete_confirm = "¿Estás seguro de que deseas eliminar esto?",
     },
     .remote =
@@ -703,7 +707,7 @@ const Language_s language_spanish = {
                     "\uE001 Volver"
                 },
                 {
-                    "\uE002 Más opciones",
+                    "\uE002 Abrir menú",
                     "\uE003 Previsualizar tema"
                 },
                 {
@@ -724,7 +728,7 @@ const Language_s language_spanish = {
                     "\uE001 Volver"
                 },
                 {
-                    "\uE002 Más opciones",
+                    "\uE002 Abrir menú",
                     "\uE003 Previsualizar fondo"
                 },
                 {
@@ -745,7 +749,7 @@ const Language_s language_spanish = {
                     "\uE001 Volver"
                 },
                 {
-                    "\uE002 Más opciones",
+                    "\uE002 Abrir menú",
                     "\uE003 Previsualizar insignias"
                 },
                 {
@@ -857,7 +861,7 @@ const Language_s language_french = {
                     "\uE001 Ajout thème aléatoire"
                 },
                 {
-                    "\uE002 Plus d'options",
+                    "\uE002 Ouvrir le menu",
                     "\uE003 Aperçu"
                 },
                 {
@@ -865,8 +869,8 @@ const Language_s language_french = {
                     "\uE005 Scanner un QR code"
                 },
                 {
-                    "Quitter",
-                    "Supprimer"
+                    "Supprimer",
+                    "Quitter"
                 }
             }
         },
@@ -875,10 +879,10 @@ const Language_s language_french = {
             .instructions = {
                 {
                     "\uE000 Installer",
-                    "\uE001 Effacer le splash installé"
+                    "\uE001 Ouvrir le menu"
                 },
                 {
-                    "\uE002 Plus d'options",
+                    "\uE002 Effacer le splash installé",
                     "\uE003 Aperçu"
                 },
                 {
@@ -886,8 +890,8 @@ const Language_s language_french = {
                     "\uE005 Scanner un QR code"
                 },
                 {
-                    "Quitter",
-                    "Supprimer"
+                    "Supprimer",
+                    "Quitter"
                 }
             }
         }
@@ -934,8 +938,8 @@ const Language_s language_french = {
                     NULL
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             }
         },
@@ -943,20 +947,20 @@ const Language_s language_french = {
             .info_line = "\uE001 Retour",
             .instructions = {
                 {
-                    "\uE079 Aller à",
+                    "\uE079 Menu de tri",
                     "\uE07A Actualiser les icônes"
                 },
                 {
-                    "\uE07B Aller sur ThemePlaza",
+                    "\uE07B Menu de dump",
                     "\uE07C Installer des Badges"
                 },
                 {
-                    "\uE004 Trier...",
-                    "\uE005 Dump..."
+                    "\uE004 Aller dans la liste",
+                    NULL
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             }
         },
@@ -976,8 +980,8 @@ const Language_s language_french = {
                     NULL
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             }
         }
@@ -1017,7 +1021,8 @@ const Language_s language_french = {
         .load_splash = "Chargement des splashs,\nveuillez patienter...",
         .load_icons = "Chargement des icônes,\nveuillez patienter...",
         .install_splash = "Installation su splash...",
-        .delete_splash = "Effacement du splash installé...",
+        .delete_splash = "Désinstallation du splash installé...",
+        .delete_theme = "Désinstallation du thème installé...",
         .install_theme = "Installation du thème...",
         .install_shuffle = "Installation de thèmes aléatoire...",
         .install_bgm = "Installation de la musique du thème...",
@@ -1065,7 +1070,8 @@ const Language_s language_french = {
         .camera_broke = "La caméra semble avoir un problème,\nimpossible de scanner de QR codes.",
         .too_many_themes = "Il y a trop de thèmes sélectionnés.",
         .not_enough_themes = "Il n'y a pas assez de thèmes sélectionnés.",
-        .uninstall_confirm = "Voulez-vous supprimer le splash\nactuellement installé?",
+        .uninstall_confirm = "Voulez-vous désinstaller le splash\nactuellement installé?",
+        .uninstall_theme_confirm = "Voulez-vous désinstaller le thème\nactuellement installé?",
         .delete_confirm = "Voulez-vous supprimer ceci?",
     },
     .remote =
@@ -1113,7 +1119,7 @@ const Language_s language_french = {
                     "\uE001 Retour"
                 },
                 {
-                    "\uE002 Plus d'options",
+                    "\uE002 Ouvrir le menu",
                     "\uE003 Aperçu"
                 },
                 {
@@ -1134,7 +1140,7 @@ const Language_s language_french = {
                     "\uE001 Retour"
                 },
                 {
-                    "\uE002 Plus d'options",
+                    "\uE002 Ouvrir le menu",
                     "\uE003 Aperçu"
                 },
                 {
@@ -1155,7 +1161,7 @@ const Language_s language_french = {
                     "\uE001 Retour"
                 },
                 {
-                    "\uE002 Plus d'options",
+                    "\uE002 Ouvrir le menu",
                     "\uE003 Aperçu"
                 },
                 {
@@ -1266,7 +1272,7 @@ const Language_s language_portuguese = {
                     "\uE001 Adicionar ao shuffle"
                 },
                 {
-                    "\uE002 Mais opções",
+                    "\uE002 Abrir menu",
                     "\uE003 Pré-visualizar"
                 },
                 {
@@ -1274,8 +1280,8 @@ const Language_s language_portuguese = {
                     "\uE005 Escanear código QR"
                 },
                 {
-                    "Sair",
-                    "Excluir do SD"
+                    "Excluir do SD",
+                    "Sair"
                 }
             }
         },
@@ -1284,10 +1290,10 @@ const Language_s language_portuguese = {
             .instructions = {
                 {
                     "\uE000 Instalar Splash",
-                    "\uE001 Excluir splash instalado"
+                    "\uE001 Abrir menu"
                 },
                 {
-                    "\uE002 Mais opções",
+                    "\uE002 Excluir splash instalado",
                     "\uE003 Pré-visualizar"
                 },
                 {
@@ -1295,11 +1301,11 @@ const Language_s language_portuguese = {
                     "\uE005 Escanear código QR"
                 },
                 {
-                    "Sair",
-                    "Excluir do SD"
+                    "Excluir do SD",
+                    "Sair"
                 }
             }
-        }
+        },
     },
 
     .install_instructions =
@@ -1343,8 +1349,8 @@ const Language_s language_portuguese = {
                     NULL
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         },
@@ -1352,20 +1358,20 @@ const Language_s language_portuguese = {
             .info_line = "\uE001 Voltar",
             .instructions = {
                 {
-                    "\uE079 Ir à página",
-                    "\uE07A Att. icones quebrados"
+                    "\uE079 Menu de classificação",
+                    "\uE07A Recarregar ícones"
                 },
                 {
-                    "\uE07B Modo ThemePlaza",
+                    "\uE07B Menu de exportação",
                     "\uE07C Instalar Insígnias"
                 },
                 {
-                    "\uE004 Classificar por:",
-                    "\uE005 Menu de exportação"
+                    "\uE004 Ir à lista",
+                    NULL
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         },
@@ -1385,8 +1391,8 @@ const Language_s language_portuguese = {
                     NULL
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         }
@@ -1426,7 +1432,8 @@ const Language_s language_portuguese = {
         .load_splash = "Carregando splashes, aguarde...",
         .load_icons = "Carregando ícones, aguarde...",
         .install_splash = "Instalando um splash...",
-        .delete_splash = "Excluindo splash instalado...",
+        .delete_splash = "Desinstalando splash instalado...",
+        .delete_theme = "Desinstalando tema instalado...",
         .install_theme = "Instalando um único tema...",
         .install_shuffle = "Instalando temas shuffle...",
         .install_bgm = "Instalando somente o BGM...",
@@ -1474,7 +1481,8 @@ const Language_s language_portuguese = {
         .camera_broke = "Sua câmera parece ter um problema,\nincapaz de escanear códigos QR.",
         .too_many_themes = "Você tem muitos temas selecionados.",
         .not_enough_themes = "Você não tem temas suficientes selecionados.",
-        .uninstall_confirm = "Tem certeza de que deseja excluir\no splash instalado?",
+        .uninstall_confirm = "Tem certeza de que deseja desinstalar\no splash instalado?",
+        .uninstall_theme_confirm = "Tem certeza de que deseja desinstalar\no tema instalado?",
         .delete_confirm = "Tem certeza de que deseja excluir isso?",
     },
     .remote =
@@ -1522,7 +1530,7 @@ const Language_s language_portuguese = {
                     "\uE001 Voltar"
                 },
                 {
-                    "\uE002 Mais opções",
+                    "\uE002 Abrir menu",
                     "\uE003 Pré-visualizar"
                 },
                 {
@@ -1543,7 +1551,7 @@ const Language_s language_portuguese = {
                     "\uE001 Voltar"
                 },
                 {
-                    "\uE002 Mais opções",
+                    "\uE002 Abrir menu",
                     "\uE003 Pré-visualizar"
                 },
                 {
@@ -1564,7 +1572,7 @@ const Language_s language_portuguese = {
                     "\uE001 Voltar"
                 },
                 {
-                    "\uE002 Mais opções",
+                    "\uE002 Abrir menu",
                     "\uE003 Pré-visualizar"
                 },
                 {
@@ -1584,16 +1592,16 @@ const Language_s language_portuguese = {
             .info_line = "\uE001 Voltar",
             .instructions = {
                 {
-                    "\uE079 Ir à página",
-                    "\uE07A Pesquisar tags"
+                    "\uE079 排序菜单",
+                    "\uE07A 重新加载图标"
                 },
                 {
-                    NULL,
-                    "\uE07C Recarregar sem cache"
+                    "\uE07B 导出菜单",
+                    "\uE07C 安装徽章"
                 },
                 {
-                    "\uE004 Mudar p. Insígnias",
-                    "\uE005 Mudar p. Splashes"
+                    "\uE004 跳转列表",
+                    NULL
                 },
                 {
                     "Sair",
@@ -1674,10 +1682,10 @@ const Language_s language_korean = {
             .instructions = {
                 {
                     "\uE000 Install Theme(s)",
-                    "\uE001 Queue shuffle"
+                    "\uE001 Queue shuffle themes"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Filter",
                     "\uE003 Preview theme"
                 },
                 {
@@ -1685,8 +1693,8 @@ const Language_s language_korean = {
                     "\uE005 Scan QR code"
                 },
                 {
-                    "Exit",
-                    "Delete from SD"
+                    "Delete from SD",
+                    "Exit"
                 }
             }
         },
@@ -1695,10 +1703,10 @@ const Language_s language_korean = {
             .instructions = {
                 {
                     "\uE000 Install splash",
-                    "\uE001 Delete cur. splash"
+                    "\uE001 Open Menu"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Delete cur. splash",
                     "\uE003 Preview splash"
                 },
                 {
@@ -1706,8 +1714,8 @@ const Language_s language_korean = {
                     "\uE005 Scan QR code"
                 },
                 {
-                    "Exit",
-                    "Delete from SD"
+                    "Delete from SD",
+                    "Exit"
                 }
             }
         }
@@ -1754,8 +1762,8 @@ const Language_s language_korean = {
                     NULL
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -1767,7 +1775,7 @@ const Language_s language_korean = {
                     "\uE07A Reload icons"
                 },
                 {
-                    "\uE07B Browse TP",
+                    NULL,
                     "\uE07C Install Badges"
                 },
                 {
@@ -1775,8 +1783,8 @@ const Language_s language_korean = {
                     "\uE005 Dump..."
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -1796,8 +1804,8 @@ const Language_s language_korean = {
                     NULL
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         }
@@ -1837,7 +1845,8 @@ const Language_s language_korean = {
         .load_splash = "Loading splashes, please wait...",
         .load_icons = "Loading icons, please wait...",
         .install_splash = "Installing a splash...",
-        .delete_splash = "Deleting installed splash...",
+        .delete_splash = "Uninstalling installed splash...",
+        .delete_theme = "Uninstalling installed theme...",
         .install_theme = "Installing a single theme...",
         .install_shuffle = "Installing shuffle themes...",
         .install_bgm = "Installing BGM-only theme...",
@@ -1886,7 +1895,8 @@ const Language_s language_korean = {
         .camera_broke = "Your camera seems to have a problem,\nunable to scan QR codes.",
         .too_many_themes = "You have too many themes selected.",
         .not_enough_themes = "You don't have enough themes selected.",
-        .uninstall_confirm = "Are you sure you would like to delete\nthe installed splash?",
+        .uninstall_confirm = "Are you sure you would like to uninstall\nthe installed splash?",
+        .uninstall_theme_confirm = "Are you sure you would like to uninstall\nthe installed theme?",
         .delete_confirm = "Are you sure you would like\nto delete this?",
     },
     .remote =
@@ -1934,7 +1944,7 @@ const Language_s language_korean = {
                     "\uE001 Go back"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Filter",
                     "\uE003 Preview theme"
                 },
                 {
@@ -1955,7 +1965,7 @@ const Language_s language_korean = {
                     "\uE001 Go back"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Filter",
                     "\uE003 Preview splash"
                 },
                 {
@@ -1976,7 +1986,7 @@ const Language_s language_korean = {
                     "\uE001 Go back"
                 },
                 {
-                    "\uE002 More options",
+                    "\uE002 Filter",
                     "\uE003 Preview badges"
                 },
                 {
@@ -2087,7 +2097,7 @@ const Language_s language_SChinese = {
                     "\uE001 安装随机主题"
                 },
                 {
-                    "\uE002 更多选项",
+                    "\uE002 打开菜单",
                     "\uE003 预览主题"
                 },
                 {
@@ -2095,8 +2105,8 @@ const Language_s language_SChinese = {
                     "\uE005 扫描QR码"
                 },
                 {
-                    "退出",
-                    "从SD卡删除"
+                    "从SD卡删除",
+                    "退出"
                 }
             }
         },
@@ -2108,7 +2118,7 @@ const Language_s language_SChinese = {
                     "\uE001 删除已安装的开机图画"
                 },
                 {
-                    "\uE002 更多选项",
+                    "\uE002 打开菜单",
                     "\uE003 预览开机图像"
                 },
                 {
@@ -2116,8 +2126,8 @@ const Language_s language_SChinese = {
                     "\uE005 扫描QR码"
                 },
                 {
-                    "退出",
-                    "从SD卡删除"
+                    "从SD卡删除",
+                    "退出"
                 }
             }
         }
@@ -2164,8 +2174,8 @@ const Language_s language_SChinese = {
                     NULL
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         },
@@ -2174,10 +2184,10 @@ const Language_s language_SChinese = {
             .instructions = {
                 {
                     "\uE079 跳转列表",
-                    "\uE07A 重新加载损坏图标"
+                    "\uE07A 重新加载图标"
                 },
                 {
-                    "\uE07B 浏览ThemePlaza",
+                    NULL,
                     "\uE07C 安装徽章"
                 },
                 {
@@ -2185,8 +2195,8 @@ const Language_s language_SChinese = {
                     "\uE005 导出菜单"
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         },
@@ -2206,8 +2216,8 @@ const Language_s language_SChinese = {
                     NULL
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         }
@@ -2247,7 +2257,8 @@ const Language_s language_SChinese = {
         .load_splash = "正在加载开机图画, 请稍等...",
         .load_icons = "正在加载图标, 请稍等...",
         .install_splash = "正在安装开机图画...",
-        .delete_splash = "正在删除安装的开机图画...",
+        .delete_splash = "正在卸载已安装的开机图画...",
+        .delete_theme = "正在卸载已安装的主题...",
         .install_theme = "正在安装主题...",
         .install_shuffle = "正在安装随机主题...",
         .install_bgm = "正在安装仅主题BGM...",
@@ -2295,7 +2306,8 @@ const Language_s language_SChinese = {
         .camera_broke = "你的相机可能有问题,\n无法扫描QR码",
         .too_many_themes = "你选择了太多主题",
         .not_enough_themes = "你没有足够的主题可以选择",
-        .uninstall_confirm = "真的要删除已安装的开机图画吗?",
+        .uninstall_confirm = "真的要卸载已安装的开机图画吗?",
+        .uninstall_theme_confirm = "真的要卸载已安装的主题吗?",
         .delete_confirm = "真的要删除这个?",
     },
     .remote =
@@ -2343,7 +2355,7 @@ const Language_s language_SChinese = {
                     "\uE001 返回"
                 },
                 {
-                    "\uE002 更多选项",
+                    "\uE002 打开菜单",
                     "\uE003 预览主题"
                 },
                 {
@@ -2364,7 +2376,7 @@ const Language_s language_SChinese = {
                     "\uE001 返回"
                 },
                 {
-                    "\uE002 更多选项",
+                    "\uE002 打开菜单",
                     "\uE003 预览开机图画"
                 },
                 {
@@ -2385,7 +2397,7 @@ const Language_s language_SChinese = {
                     "\uE001 返回"
                 },
                 {
-                    "\uE002 更多选项",
+                    "\uE002 打开菜单",
                     "\uE003 预览徽章"
                 },
                 {

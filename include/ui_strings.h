@@ -65,6 +65,7 @@ typedef struct {
     const char *load_icons;
     const char *install_splash;
     const char *delete_splash;
+    const char *delete_theme;
     const char *install_theme;
     const char *install_shuffle;
     const char *install_bgm;
@@ -114,6 +115,7 @@ typedef struct {
     const char *too_many_themes;
     const char *not_enough_themes;
     const char *uninstall_confirm;
+    const char *uninstall_theme_confirm;
     const char *delete_confirm;
 } Main_Strings_s;
 
