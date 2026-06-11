@@ -532,17 +532,10 @@ int main(void)
                         }
                     } else if(BETWEEN(320-72, x, 320-48))
                     {
-                        goto enable_qr;
+                        goto browse_remote;
                     } else if(BETWEEN(320-96, x, 320-72))
                     {
-                        if(themeplaza_browser((RemoteMode) current_mode))
-                        {
-                            current_mode = MODE_THEMES;
-                            load_lists(lists);
-                        }
-                        extra_mode = false;
-                        draw_mode = DRAW_MODE_LIST;
-                        extra_index = 1;
+                        goto enable_qr;
                     }
                 }
             }
@@ -790,26 +783,32 @@ int main(void)
                     {
                         if (toolbar_hit(x, y, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y))
                         {
-                            extra_index = 0;
+                            goto browse_remote;
                         }
-                        else if (BETWEEN(TOOLBAR_EXTRA_BADGE_X, x, TOOLBAR_EXTRA_FILTER_X))
+                        else if (BETWEEN(320-48, x, 320-24))
                         {
-                            load_icons_first(current_list, false);
-                            extra_mode = false;
-                            draw_mode = DRAW_MODE_LIST;
-                            extra_index = 1;
+                            goto dump_single;
                         }
-                        else if (BETWEEN(TOOLBAR_EXTRA_FILTER_X, x, TOOLBAR_EXTRA_DUMP_X))
+                        else if (BETWEEN(320-72, x, 320-48))
                         {
-                            extra_index = 2;
+                            switch (current_list->current_sort)
+                            {
+                                case SORT_NAME:
+                                    goto sort_author;
+                                    break;
+                                case SORT_AUTHOR:
+                                    goto sort_path;
+                                    break;
+                                case SORT_PATH:
+                                    goto sort_name;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                        else if (BETWEEN(TOOLBAR_EXTRA_DUMP_X, x, 320))
+                        else if (BETWEEN(320-96, x, 320-72))
                         {
-                            extra_mode = false;
-                            extra_index = 1;
-                            draw_mode = DRAW_MODE_LIST;
-                            draw_install(INSTALL_BADGES);
-                            install_badges();
+                            goto badge_install;
                         }
                         else if (BETWEEN(2, x, 26))
                         {
@@ -827,6 +826,21 @@ int main(void)
                     extra_mode = false;
                     draw_mode = DRAW_MODE_LIST;
                 }
+                else if(kDown & KEY_DLEFT)
+                {
+                    browse_remote:
+                    RemoteProvider provider = REMOTE_PROVIDER_THEMEPLAZA;
+                    const bool downloaded = select_remote_provider(&provider)
+                        && browse_remote_provider(provider, (RemoteMode) current_mode);
+                    if(downloaded)
+                    {
+                        current_mode = MODE_THEMES;
+                        load_lists(lists);
+                    }
+                    extra_mode = false;
+                    draw_mode = DRAW_MODE_LIST;
+                    extra_index = 1;
+                }
                 else if(kDown & KEY_DUP)
                 {
                     extra_index = 0;
@@ -837,10 +851,6 @@ int main(void)
                     extra_mode = false;
                     draw_mode = DRAW_MODE_LIST;
                     extra_index = 1;
-                }
-                else if(kDown & KEY_DLEFT)
-                {
-                    extra_index = 2;
                 }
                 else if (kDown & KEY_DRIGHT)
                 {
@@ -1073,14 +1083,7 @@ int main(void)
                     }
                     else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
                     {
-                        if(themeplaza_browser((RemoteMode) current_mode))
-                        {
-                            current_mode = MODE_THEMES;
-                            load_lists(lists);
-                        }
-                        extra_mode = false;
-                        draw_mode = DRAW_MODE_LIST;
-                        extra_index = 1;
+                        goto browse_remote;
                     }
                     else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y))
                     {

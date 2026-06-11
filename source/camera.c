@@ -394,7 +394,7 @@ bool init_qr(void)
 
                 if(mode != REMOTE_MODE_AMOUNT)
                 {
-                    save_zip_to_sd(filename, zip_size, zip_buf, mode);
+                    save_zip_to_sd(filename, zip_size, zip_buf, mode, REMOTE_PROVIDER_THEMEPLAZA);
                     success = true;
                 }
                 else
@@ -402,7 +402,7 @@ bool init_qr(void)
                     bool badge = draw_confirm_no_interface(language.camera.badge_question);
                     if (badge)
                     {
-                        save_zip_to_sd(filename, zip_size, zip_buf, REMOTE_MODE_BADGES);
+                        save_zip_to_sd(filename, zip_size, zip_buf, REMOTE_MODE_BADGES, REMOTE_PROVIDER_THEMEPLAZA);
                         // don't set success since we don't need to reload lists for badge zips
                     } else
                     {
