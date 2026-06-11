@@ -27,6 +27,7 @@
 #include "draw.h"
 #include "unicode.h"
 #include "colors.h"
+#include "remote.h"
 #include "ui_strings.h"
 
 #include "sprites.h"
@@ -51,6 +52,12 @@ static const char *remote_mode_switch_char[REMOTE_MODE_AMOUNT] = {
     "T",
     "S",
     "B",
+};
+
+static const char *remote_mode_name[REMOTE_MODE_AMOUNT] = {
+    "Theme mode",
+    "Splash mode",
+    "Badge mode",
 };
 
 void init_screens(void)

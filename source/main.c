@@ -515,7 +515,7 @@ int main(void)
                         continue;
                     } else if(BETWEEN(320-72, x, 320-48))
                     {
-                        goto browse_themeplaza;
+                        goto browse_remote;
                     } else if(BETWEEN(320-96, x, 320-72))
                     {
                         goto enable_qr;
@@ -766,7 +766,7 @@ int main(void)
                     {
                         if (BETWEEN(320-24, x, 320))
                         {
-                            goto browse_themeplaza;
+                            goto browse_remote;
                         } else if (BETWEEN(320-48, x, 320-24))
                         {
                             goto dump_single;
@@ -807,8 +807,11 @@ int main(void)
                 }
                 else if(kDown & KEY_DLEFT)
                 {
-                    browse_themeplaza:
-                    if(themeplaza_browser((RemoteMode) current_mode))
+                    browse_remote:
+                    RemoteProvider provider = REMOTE_PROVIDER_THEMEPLAZA;
+                    const bool downloaded = select_remote_provider(&provider)
+                        && browse_remote_provider(provider, (RemoteMode) current_mode);
+                    if(downloaded)
                     {
                         current_mode = MODE_THEMES;
                         load_lists(lists);
