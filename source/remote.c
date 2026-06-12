@@ -60,6 +60,13 @@ static int curl_progress_cb(void *clientp, double dltotal, double dlnow, double 
     (void)ulnow;
 
     InstallType install_type = *(InstallType *)clientp;
+    hidScanInput();
+    if (hidKeysDown() & KEY_B)
+    {
+        set_loading_cancel_requested(true);
+        return 1;
+    }
+
     if (install_type != INSTALL_NONE && dltotal > 0.0)
         draw_loading_bar((u32)dlnow, (u32)dltotal, install_type);
 
@@ -1517,9 +1524,6 @@ redirect: // goto here if we need to redirect
 #define ERROR_BUFFER_SIZE 0x80
     char err_buf[ERROR_BUFFER_SIZE];
     Result res;
-    const bool can_cancel_loading = install_type == INSTALL_LOADING_REMOTE_THEMES
-        || install_type == INSTALL_LOADING_REMOTE_SPLASHES
-        || install_type == INSTALL_LOADING_REMOTE_BADGES;
     ParseResult parse = parse_header(&_header, &context, acceptable_mime_types);
     switch (parse)
     {
@@ -1532,7 +1536,7 @@ redirect: // goto here if we need to redirect
         case 0xd8a0a028: // bad zip file
         case 0xd8a0a03c: // SSL failure
             // try curl?
-            res = curl_http_get(url, filename, buf, size, acceptable_mime_types);
+            res = curl_http_get(url, filename, buf, size, acceptable_mime_types, install_type);
             if (R_SUCCEEDED(res))
             {
                 httpcCloseContext(&context);
@@ -1691,8 +1695,9 @@ no_error:;
     do
     {
         hidScanInput();
-        if (can_cancel_loading && (hidKeysDown() & KEY_B))
+        if (hidKeysDown() & KEY_B)
         {
+            httpcCancelConnection(&context);
             httpcCloseContext(&context);
             free(*buf);
             *buf = NULL;

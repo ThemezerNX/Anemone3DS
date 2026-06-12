@@ -407,7 +407,7 @@ static void draw_install_handler(InstallType type)
         C2D_Text * install_text = &text[type];
         draw_c2d_text_center(GFX_TOP, 120.0f, 0.5f, 0.8f, 0.8f, colors[COLOR_WHITE_BACKGROUND], install_text);
 
-        if(type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES)
+        if(type == INSTALL_DOWNLOAD || type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES || type == INSTALL_LOADING_REMOTE_PREVIEW || type == INSTALL_LOADING_REMOTE_BGM)
             draw_text_center(GFX_TOP, 168.0f, 0.5f, 0.55f, 0.55f, colors[COLOR_WHITE_BACKGROUND], language.draw.cancel_loading);
     }
 }
@@ -422,7 +422,7 @@ void draw_install(InstallType type)
 
 void draw_loading_bar(u32 current, u32 max, InstallType type)
 {
-    if(type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES)
+    if(type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES || type == INSTALL_LOADING_REMOTE_PREVIEW || type == INSTALL_LOADING_REMOTE_BGM)
     {
         hidScanInput();
         if(hidKeysDown() & KEY_B)
