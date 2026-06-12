@@ -781,11 +781,21 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
     {
         if (draw_mode == DRAW_MODE_INSTALL)
         {
-            draw_image_tint(sprites_install_idx, 320-24, 0, accent_tint);
-            draw_image_tint(sprites_shuffle_idx, 320-48, 0, accent_tint);
-            draw_image_tint(sprites_shuffle_no_bgm_idx, 320-72, 0, accent_tint);
-            draw_image_tint(sprites_bgm_only_idx, 320-96, 0, accent_tint);
-            draw_image_tint(sprites_back_idx, 2, 0, accent_tint);
+            if(current_mode == MODE_SPLASHES)
+            {
+                draw_image_tint(sprites_arrow_up_idx, 320-72, 0, accent_tint);
+                draw_image_tint(sprites_arrow_down_idx, 320-48, 0, accent_tint);
+                draw_image_tint(sprites_install_idx, 320-24, 0, accent_tint);
+            }
+            else
+            {
+                draw_image_tint(sprites_install_idx, 320-24, 0, accent_tint);
+                draw_image_tint(sprites_shuffle_idx, 320-48, 0, accent_tint);
+                draw_image_tint(sprites_shuffle_no_bgm_idx, 320-72, 0, accent_tint);
+                draw_image_tint(sprites_bgm_only_idx, 320-96, 0, accent_tint);
+            }
+            if(current_mode != MODE_SPLASHES)
+                draw_image_tint(sprites_back_idx, 2, 0, accent_tint);
         } else if (draw_mode == DRAW_MODE_EXTRA)
         {
             draw_image_tint(sprites_sort_idx, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y, accent_tint);

@@ -448,7 +448,7 @@ int main(void)
         if(current_mode == MODE_SPLASHES && !uninstall_available)
             instructions.instructions[1][0] = NULL;
         if(install_mode)
-            instructions = language.install_instructions;
+            instructions = current_mode == MODE_SPLASHES ? language.splash_install_instructions : language.install_instructions;
         if(extra_mode)
         {
             instructions = language.extra_instructions[extra_index];
@@ -635,7 +635,7 @@ int main(void)
 
         if(install_mode)
         {
-            if ((kDown | kHeld) & KEY_TOUCH)
+            if(current_mode == MODE_THEMES && ((kDown | kHeld) & KEY_TOUCH))
             {
                 touchPosition touch = {0};
                 hidTouchRead(&touch);
@@ -666,7 +666,116 @@ int main(void)
                 }
             }
 
-            if(kDown & KEY_B)
+            if(current_mode == MODE_SPLASHES)
+            {
+                if ((kDown | kHeld) & KEY_TOUCH)
+                {
+                    touchPosition touch = {0};
+                    hidTouchRead(&touch);
+                    u16 x = touch.px;
+                    u16 y = touch.py;
+
+                    if (kDown & KEY_TOUCH && y < 24)
+                    {
+                        if (BETWEEN(320-24, x, 320))
+                        {
+                            install_mode = false;
+                            draw_mode = DRAW_MODE_LIST;
+                            draw_install(INSTALL_SPLASH);
+                            splash_install(current_entry, SPLASH_INSTALL_NORMAL);
+                            for(int i = 0; i < current_list->entries_count; i++)
+                            {
+                                Entry_s * splash = &current_list->entries[i];
+                                if(splash == current_entry)
+                                    splash->installed = true;
+                                else
+                                    splash->installed = false;
+                            }
+                        }
+                        else if (BETWEEN(320-48, x, 320-24))
+                        {
+                            install_mode = false;
+                            draw_mode = DRAW_MODE_LIST;
+                            draw_install(INSTALL_SPLASH);
+                            splash_install(current_entry, SPLASH_INSTALL_BOTTOM);
+                            for(int i = 0; i < current_list->entries_count; i++)
+                            {
+                                Entry_s * splash = &current_list->entries[i];
+                                if(splash == current_entry)
+                                    splash->installed = true;
+                                else
+                                    splash->installed = false;
+                            }
+                        }
+                        else if (BETWEEN(320-72, x, 320-48))
+                        {
+                            install_mode = false;
+                            draw_mode = DRAW_MODE_LIST;
+                            draw_install(INSTALL_SPLASH);
+                            splash_install(current_entry, SPLASH_INSTALL_TOP);
+                            for(int i = 0; i < current_list->entries_count; i++)
+                            {
+                                Entry_s * splash = &current_list->entries[i];
+                                if(splash == current_entry)
+                                    splash->installed = true;
+                                else
+                                    splash->installed = false;
+                            }
+                        }
+                    }
+                }
+                if(kDown & KEY_B)
+                {
+                    install_mode = false;
+                    draw_mode = DRAW_MODE_LIST;
+                }
+                else if(kDown & KEY_DUP)
+                {
+                    install_mode = false;
+                    draw_mode = DRAW_MODE_LIST;
+                    draw_install(INSTALL_SPLASH);
+                    splash_install(current_entry, SPLASH_INSTALL_NORMAL);
+                    for(int i = 0; i < current_list->entries_count; i++)
+                    {
+                        Entry_s * splash = &current_list->entries[i];
+                        if(splash == current_entry)
+                            splash->installed = true;
+                        else
+                            splash->installed = false;
+                    }
+                }
+                else if(kDown & KEY_DLEFT)
+                {
+                    install_mode = false;
+                    draw_mode = DRAW_MODE_LIST;
+                    draw_install(INSTALL_SPLASH);
+                    splash_install(current_entry, SPLASH_INSTALL_TOP);
+                    for(int i = 0; i < current_list->entries_count; i++)
+                    {
+                        Entry_s * splash = &current_list->entries[i];
+                        if(splash == current_entry)
+                            splash->installed = true;
+                        else
+                            splash->installed = false;
+                    }
+                }
+                else if(kDown & KEY_DRIGHT)
+                {
+                    install_mode = false;
+                    draw_mode = DRAW_MODE_LIST;
+                    draw_install(INSTALL_SPLASH);
+                    splash_install(current_entry, SPLASH_INSTALL_BOTTOM);
+                    for(int i = 0; i < current_list->entries_count; i++)
+                    {
+                        Entry_s * splash = &current_list->entries[i];
+                        if(splash == current_entry)
+                            splash->installed = true;
+                        else
+                            splash->installed = false;
+                    }
+                }
+            }
+            else if(kDown & KEY_B)
             {
                 install_leave:
                 install_mode = false;
@@ -947,16 +1056,8 @@ int main(void)
                     draw_mode = DRAW_MODE_INSTALL;
                     break;
                 case MODE_SPLASHES:
-                    draw_install(INSTALL_SPLASH);
-                    splash_install(current_entry);
-                    for(int i = 0; i < current_list->entries_count; i++)
-                    {
-                        Entry_s * splash = &current_list->entries[i];
-                        if(splash == current_entry)
-                            splash->installed = true;
-                        else
-                            splash->installed = false;
-                    }
+                    install_mode = true;
+                    draw_mode = DRAW_MODE_INSTALL;
                     break;
                 default:
                     break;
@@ -1125,16 +1226,8 @@ int main(void)
                                 draw_mode = DRAW_MODE_INSTALL;
                                 break;
                             case MODE_SPLASHES:
-                                draw_install(INSTALL_SPLASH);
-                                splash_install(current_entry);
-                                for(int i = 0; i < current_list->entries_count; i++)
-                                {
-                                    Entry_s * splash = &current_list->entries[i];
-                                    if(splash == current_entry)
-                                        splash->installed = true;
-                                    else
-                                        splash->installed = false;
-                                }
+                                install_mode = true;
+                                draw_mode = DRAW_MODE_INSTALL;
                                 break;
                             default:
                                 break;

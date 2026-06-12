@@ -177,6 +177,7 @@ typedef struct {
 typedef struct {
     Instructions_s normal_instructions[MODE_AMOUNT];
     Instructions_s install_instructions;
+    Instructions_s splash_install_instructions;
     Instructions_s extra_instructions[3];
     Camera_Strings_s camera;
     Draw_Strings_s draw;
