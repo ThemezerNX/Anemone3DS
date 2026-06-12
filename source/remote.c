@@ -1424,10 +1424,13 @@ Result curl_http_get(const char * url, char ** out_filename, char ** buf, u32 * 
     data.result_buf[data.result_written] = 0;
     if (cres != CURLE_OK)
     {
+        const bool was_canceled = cres == CURLE_ABORTED_BY_CALLBACK || loading_cancel_requested();
         free(data.result_buf);
         if (header.mime_type) free(header.mime_type);
         if (header.filename) free(header.filename);
         if (list) curl_slist_free_all(list);
+        if (was_canceled)
+            return MAKERESULT(RL_TEMPORARY, RS_CANCELED, RM_APPLICATION, RD_CANCEL_REQUESTED);
         return -1;
     }
     
@@ -1539,6 +1542,13 @@ redirect: // goto here if we need to redirect
             res = curl_http_get(url, filename, buf, size, acceptable_mime_types, install_type);
             if (R_SUCCEEDED(res))
             {
+                httpcCloseContext(&context);
+                return res;
+            }
+
+            if (R_SUMMARY(res) == RS_CANCELED)
+            {
+                httpcCancelConnection(&context);
                 httpcCloseContext(&context);
                 return res;
             }
