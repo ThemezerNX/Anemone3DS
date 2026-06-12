@@ -893,7 +893,12 @@ int main(void)
                 {
                     if (y < 24)
                     {
-                        if (toolbar_hit(x, y, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y))
+                        if (BETWEEN(2, x, 26))
+                        {
+                            extra_mode = false;
+                            draw_mode = DRAW_MODE_LIST;
+                        }
+                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y))
                         {
                             extra_index = 0;
                         }
@@ -910,13 +915,18 @@ int main(void)
                         }
                         else if (toolbar_hit(x, y, TOOLBAR_EXTRA_DUMP_X, TOOLBAR_TOP_Y))
                         {
-                            goto badge_install;
-                        }
-                        else if (BETWEEN(2, x, 26))
-                        {
                             extra_mode = false;
                             extra_index = 1;
                             draw_mode = DRAW_MODE_LIST;
+                            draw_install(INSTALL_BADGES);
+                            install_badges();
+                        }
+                    }
+                    else if (y >= 216)
+                    {
+                        if (BETWEEN(2, x, 26))
+                        {
+                            quit = true;
                         }
                     }
                 }

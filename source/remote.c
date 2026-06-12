@@ -766,6 +766,9 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
             if (extra_mode)
                 instructions = language.remote_extra_instructions[mode];
 
+            instructions.instructions[BUTTONS_INFO_LINES-1][0] = NULL;
+            instructions.instructions[BUTTONS_INFO_LINES-1][1] = NULL;
+
             if (is_remote_provider_v2(provider))
                 remote_v2_lock_texture();
             draw_grid_interface(current_list, instructions, extra_mode);
@@ -977,15 +980,11 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
                     {
                         break;
                     }
-                    else if (BETWEEN(26, x, 50))
-                    {
-                        goto exit;
-                    }
-                    else if (BETWEEN(50, x, 196))
+                    else if (BETWEEN(26, x, 196))
                     {
                         search_menu(current_list);
                     }
-                    else if (BETWEEN(196, x, 272))
+                    else if (BETWEEN(TOOLBAR_REMOTE_FILTER_X, x, TOOLBAR_REMOTE_MODE_X))
                     {
                         extra_mode = true;
                     }

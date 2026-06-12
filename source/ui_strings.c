@@ -329,8 +329,8 @@ const Language_s language_english = {
                     "\uE005 Next page"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -350,8 +350,8 @@ const Language_s language_english = {
                     "\uE005 Next page"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -371,8 +371,8 @@ const Language_s language_english = {
                     "\uE005 Next page"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         }
@@ -395,8 +395,8 @@ const Language_s language_english = {
                     "\uE005 Switch to Splashes"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -416,8 +416,8 @@ const Language_s language_english = {
                     "\uE005 Switch to Badges"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -437,8 +437,8 @@ const Language_s language_english = {
                     "\uE005 Switch to Themes"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         }
@@ -765,8 +765,8 @@ const Language_s language_spanish = {
                     "\uE005 Página siguiente"
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         },
@@ -786,8 +786,8 @@ const Language_s language_spanish = {
                     "\uE005 Página siguiente"
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         },
@@ -807,8 +807,8 @@ const Language_s language_spanish = {
                     "\uE005 Pagina siguiente"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         }
@@ -831,8 +831,8 @@ const Language_s language_spanish = {
                     "\uE005 Cambiar Splashes"
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         },
@@ -852,8 +852,8 @@ const Language_s language_spanish = {
                     "\uE005 Cambiar Insignias"
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         },
@@ -873,8 +873,8 @@ const Language_s language_spanish = {
                     "\uE005 Cambiar Temas"
                 },
                 {
-                    "Salir",
-                    NULL
+                    NULL,
+                    "Salir"
                 }
             }
         },
@@ -1202,8 +1202,8 @@ const Language_s language_french = {
                     "\uE005 Page suivante"
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             }
         },
@@ -1223,8 +1223,8 @@ const Language_s language_french = {
                     "\uE005 Page suivante"
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             }
         },
@@ -1244,8 +1244,8 @@ const Language_s language_french = {
                     "\uE005 Page suivante"
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             }
         }
@@ -1268,8 +1268,8 @@ const Language_s language_french = {
                     "\uE005 Naviguer les Splashs"
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             },
         },
@@ -1289,8 +1289,8 @@ const Language_s language_french = {
                     "\uE005 Naviguer les Badges"
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             },
         },
@@ -1310,8 +1310,8 @@ const Language_s language_french = {
                     "\uE005 Naviguer les Thèmes"
                 },
                 {
-                    "Quitter",
-                    NULL
+                    NULL,
+                    "Quitter"
                 }
             },
         }
@@ -1638,8 +1638,8 @@ const Language_s language_portuguese = {
                     "\uE005 Próxima página"
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         },
@@ -1659,8 +1659,8 @@ const Language_s language_portuguese = {
                     "\uE005 Próxima página"
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         },
@@ -1680,8 +1680,8 @@ const Language_s language_portuguese = {
                     "\uE005 Próxima página"
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         }
@@ -1704,8 +1704,8 @@ const Language_s language_portuguese = {
                     NULL
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         },
@@ -1725,8 +1725,8 @@ const Language_s language_portuguese = {
                     "\uE005 Mudar p. Insígnias"
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         },
@@ -1746,8 +1746,8 @@ const Language_s language_portuguese = {
                     "\uE005 Mudar p. Temas"
                 },
                 {
-                    "Sair",
-                    NULL
+                    NULL,
+                    "Sair"
                 }
             }
         },
@@ -2077,8 +2077,8 @@ const Language_s language_korean = {
                     "\uE005 Next page"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -2098,8 +2098,8 @@ const Language_s language_korean = {
                     "\uE005 Next page"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -2119,8 +2119,8 @@ const Language_s language_korean = {
                     "\uE005 Next page"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         }
@@ -2143,8 +2143,8 @@ const Language_s language_korean = {
                     "\uE005 Go to Splashes"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -2164,8 +2164,8 @@ const Language_s language_korean = {
                     "\uE005 Go to Badges"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         },
@@ -2185,8 +2185,8 @@ const Language_s language_korean = {
                     "\uE005 Go to Themes"
                 },
                 {
-                    "Exit",
-                    NULL
+                    NULL,
+                    "Exit"
                 }
             }
         }
@@ -2513,8 +2513,8 @@ const Language_s language_SChinese = {
                     "\uE005 下一页"
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         },
@@ -2534,8 +2534,8 @@ const Language_s language_SChinese = {
                     "\uE005 下一页"
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         },
@@ -2555,8 +2555,8 @@ const Language_s language_SChinese = {
                     "\uE005 下一页"
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         }
@@ -2579,8 +2579,8 @@ const Language_s language_SChinese = {
                     "\uE005 选择开机画面"
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         },
@@ -2600,8 +2600,8 @@ const Language_s language_SChinese = {
                     "\uE005 选择徽章"
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         },
@@ -2621,8 +2621,8 @@ const Language_s language_SChinese = {
                     "\uE005 选择主题"
                 },
                 {
-                    "退出",
-                    NULL
+                    NULL,
+                    "退出"
                 }
             }
         }

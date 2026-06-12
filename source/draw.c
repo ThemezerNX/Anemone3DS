@@ -617,16 +617,16 @@ void draw_grid_interface(Entry_List_s * list, Instructions_s instructions, int e
 
     set_screen(bottom);
 
-    draw_c2d_text(7, 3, 0.5f, 0.6f, 0.6f, colors[COLOR_WHITE_ACCENT], &text[TEXT_SEARCH]);
-
     C2D_ImageTint accent_tint;
     C2D_PlainImageTint(&accent_tint, colors[COLOR_WHITE_ACCENT], 1.0f);
 
-    draw_image_tint(sprites_back_idx, 320-96, 0, accent_tint);
-    draw_image_tint(sprites_exit_idx, 320-72, 0, accent_tint);
-    draw_image_tint(sprites_preview_idx, 320-48, 0, accent_tint);
+    draw_image_tint(sprites_back_idx, TOOLBAR_REMOTE_BACK_X, TOOLBAR_TOP_Y, accent_tint);
+    draw_c2d_text(TOOLBAR_REMOTE_SEARCH_X, 3, 0.5f, 0.6f, 0.6f, colors[COLOR_WHITE_ACCENT], &text[TEXT_SEARCH]);
+    draw_image_tint(sprites_filter_idx, TOOLBAR_REMOTE_FILTER_X, TOOLBAR_TOP_Y, accent_tint);
+    draw_text(TOOLBAR_REMOTE_MODE_X + 2.5, -3, 0.6f, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], remote_mode_switch_char[current_mode]);
 
-    draw_text(320-24+2.5, -3, 0.6, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], remote_mode_switch_char[current_mode]);
+    draw_image_tint(sprites_preview_idx, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y, accent_tint);
+    draw_image_tint(sprites_download_idx, TOOLBAR_MAIN_INSTALL_X, TOOLBAR_BOTTOM_Y, accent_tint);
 
     C2D_ImageTint background_tint;
     C2D_PlainImageTint(&background_tint, colors[COLOR_WHITE_BACKGROUND], 1.0f);
@@ -798,11 +798,12 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
                 draw_image_tint(sprites_back_idx, 2, 0, accent_tint);
         } else if (draw_mode == DRAW_MODE_EXTRA)
         {
-            draw_image_tint(sprites_sort_idx, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y, accent_tint);
+            draw_image_tint(sprites_back_idx, 2, 0, accent_tint);
+            draw_image_tint(sprites_filter_idx, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y, accent_tint);
             draw_image_tint(sprites_reload_idx, TOOLBAR_EXTRA_BADGE_X, TOOLBAR_TOP_Y, accent_tint);
             draw_image_tint(sprites_dump_idx, TOOLBAR_EXTRA_FILTER_X, TOOLBAR_TOP_Y, accent_tint);
             draw_image_tint(sprites_badge_idx, TOOLBAR_EXTRA_DUMP_X, TOOLBAR_TOP_Y, accent_tint);
-            draw_image_tint(sprites_back_idx, 2, 0, accent_tint);
+            draw_image_tint(sprites_exit_idx, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y, accent_tint);
         }
     }
 
