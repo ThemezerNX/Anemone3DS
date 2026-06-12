@@ -26,6 +26,6 @@ void remote_v2_start_icon_thread(Entry_List_s * list, bool ignore_cache);
 const char * remote_v2_get_kind_path(RemoteMode mode);
 void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t page, bool ignore_cache, InstallType loading_screen);
 void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool ignore_cache, InstallType type);
-Result curl_http_get(const char * url, char ** filename, char ** buf, u32 * size, const char * acceptable_mime_types);
+Result curl_http_get(const char * url, char ** filename, char ** buf, u32 * size, const char * acceptable_mime_types, InstallType install_type);
 
 #endif

@@ -54,6 +54,18 @@ static bool mime_type_is_acceptable(const char *acceptable_mime_types, const cha
 static bool remote_browser(RemoteMode mode, RemoteProvider provider);
 static void restart_remote_icon_loader_if_needed(Entry_List_s * list, RemoteProvider provider);
 
+static int curl_progress_cb(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)
+{
+    (void)ultotal;
+    (void)ulnow;
+
+    InstallType install_type = *(InstallType *)clientp;
+    if (install_type != INSTALL_NONE && dltotal > 0.0)
+        draw_loading_bar((u32)dlnow, (u32)dltotal, install_type);
+
+    return loading_cancel_requested() ? 1 : 0;
+}
+
 static u32 next_or_equal_power_of_2(u32 v)
 {
     v--;
@@ -1358,7 +1370,7 @@ static bool mime_type_is_acceptable(const char *acceptable_mime_types, const cha
     return false;
 }
 
-Result curl_http_get(const char * url, char ** out_filename, char ** buf, u32 * size, const char * acceptable_mime_types)
+Result curl_http_get(const char * url, char ** out_filename, char ** buf, u32 * size, const char * acceptable_mime_types, InstallType install_type)
 {
     DEBUG("attempting curl_http_get\n");
     curl_data data = {0};
@@ -1374,6 +1386,8 @@ Result curl_http_get(const char * url, char ** out_filename, char ** buf, u32 * 
     curl_easy_setopt(handle, CURLOPT_BUFFERSIZE, 102400L);
     curl_easy_setopt(handle, CURLOPT_URL, url);
     curl_easy_setopt(handle, CURLOPT_NOPROGRESS, 0L);
+    curl_easy_setopt(handle, CURLOPT_PROGRESSDATA, &install_type);
+    curl_easy_setopt(handle, CURLOPT_PROGRESSFUNCTION, curl_progress_cb);
     curl_easy_setopt(handle, CURLOPT_USERAGENT, USER_AGENT);
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(handle, CURLOPT_MAXREDIRS, 50L);

@@ -74,7 +74,7 @@ static bool remote_v2_fetch_icon_png(RemoteV2_IconHttpSession_s * session, const
     (void)session;
 
     remote_v2_debug_elapsed(start_ms, "icon fetch start %s\n", url);
-    Result res = curl_http_get(url, NULL, icon_png, icon_size, "image/png");
+    Result res = curl_http_get(url, NULL, icon_png, icon_size, "image/png", INSTALL_NONE);
     if (R_FAILED(res))
     {
         remote_v2_debug_elapsed(start_ms, "icon fetch failed %s (res=%08lx)\n", url, res);
