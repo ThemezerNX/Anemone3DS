@@ -42,6 +42,17 @@ static C2D_TextBuf widthBuf;
 static C2D_SpriteSheet spritesheet;
 static C2D_Sprite sprite_shuffle, sprite_shuffle_no_bgm, sprite_installed, sprite_start, sprite_select;
 static bool cancel_requested = false;
+static bool loading_bar_started = false;
+
+static bool is_network_loading_type(InstallType type)
+{
+    return type == INSTALL_LOADING_REMOTE_THEMES
+        || type == INSTALL_LOADING_REMOTE_SPLASHES
+        || type == INSTALL_LOADING_REMOTE_BADGES
+        || type == INSTALL_LOADING_REMOTE_PREVIEW
+        || type == INSTALL_LOADING_REMOTE_BGM
+        || type == INSTALL_DOWNLOAD;
+}
 
 C2D_Text text[TEXT_AMOUNT];
 static const char * mode_switch_char[MODE_AMOUNT] = {
@@ -409,12 +420,19 @@ static void draw_install_handler(InstallType type)
 
         if(type == INSTALL_DOWNLOAD || type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES || type == INSTALL_LOADING_REMOTE_PREVIEW || type == INSTALL_LOADING_REMOTE_BGM)
             draw_text_center(GFX_TOP, 168.0f, 0.5f, 0.55f, 0.55f, colors[COLOR_WHITE_BACKGROUND], language.draw.cancel_loading);
+
+        if(!loading_bar_started && is_network_loading_type(type))
+        {
+            set_screen(bottom);
+            draw_text_center(GFX_BOTTOM, 110.0f, 0.5f, 0.7f, 0.7f, colors[COLOR_WHITE_BACKGROUND], language.draw.connecting_internet);
+        }
     }
 }
 
 void draw_install(InstallType type)
 {
     set_loading_cancel_requested(false);
+    loading_bar_started = false;
     draw_base_interface();
     draw_install_handler(type);
     end_frame();
@@ -422,13 +440,14 @@ void draw_install(InstallType type)
 
 void draw_loading_bar(u32 current, u32 max, InstallType type)
 {
-    if(type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES || type == INSTALL_LOADING_REMOTE_PREVIEW || type == INSTALL_LOADING_REMOTE_BGM)
+    if(is_network_loading_type(type))
     {
         hidScanInput();
         if(hidKeysDown() & KEY_B)
             set_loading_cancel_requested(true);
     }
 
+    loading_bar_started = true;
     draw_base_interface();
     draw_install_handler(type);
     set_screen(bottom);
