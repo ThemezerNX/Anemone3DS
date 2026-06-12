@@ -443,6 +443,140 @@ const Language_s language_english = {
             }
         }
     },
+
+.remote_v2_instructions =
+    {
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Download theme",
+                    "\uE001 Go back"
+                },
+                {
+                    "\uE002 Filter",
+                    "\uE003 Preview theme"
+                },
+                {
+                    "\uE004 Previous page",
+                    "\uE005 Next page"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Download splash",
+                    "\uE001 Go back"
+                },
+                {
+                    "\uE002 Filter",
+                    "\uE003 Preview splash"
+                },
+                {
+                    "\uE004 Previous page",
+                    "\uE005 Next page"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Download badges",
+                    "\uE001 Go back"
+                },
+                {
+                    "\uE002 Filter",
+                    "\uE003 Preview badges"
+                },
+                {
+                    "\uE004 Previous page",
+                    "\uE005 Next page"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        }
+    },
+
+.remote_v2_extra_instructions =
+    {
+        {
+            .info_line = "\uE001 Leave extra menu",
+            .instructions = {
+                {
+                    "\uE079 Jump to page",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Switch to Badges",
+                    "\uE005 Switch to Splashes"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Leave extra menu",
+            .instructions = {
+                {
+                    "\uE079 Jump to page",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Switch to Themes",
+                    "\uE005 Switch to Badges"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Leave extra menu",
+            .instructions = {
+                {
+                    "\uE079 Jump to page",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Switch to Splashes",
+                    "\uE005 Switch to Themes"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        }
+    },
     .splashes =
     {
         .no_splash_found = "No splash.bin or splashbottom.bin found.\nIs this a splash?",
@@ -846,6 +980,140 @@ const Language_s language_spanish = {
                 {
                     NULL,
                     "\uE07C Recargar sin caché"
+                },
+                {
+                    "\uE004 Cambiar Temas",
+                    "\uE005 Cambiar Insignias"
+                },
+                {
+                    NULL,
+                    "Salir"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Dejar menú extra",
+            .instructions = {
+                {
+                    "\uE079 Saltar a la página",
+                    "\uE07A Buscar etiquetas"
+                },
+                {
+                    NULL,
+                    "\uE07C Recargar sin caché"
+                },
+                {
+                    "\uE004 Cambiar Splashes",
+                    "\uE005 Cambiar Temas"
+                },
+                {
+                    NULL,
+                    "Salir"
+                }
+            }
+        },
+    },
+
+.remote_v2_instructions =
+    {
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Descargar tema",
+                    "\uE001 Volver"
+                },
+                {
+                    "\uE002 Abrir menú",
+                    "\uE003 Previsualizar tema"
+                },
+                {
+                    "\uE004 Página anterior",
+                    "\uE005 Página siguiente"
+                },
+                {
+                    NULL,
+                    "Salir"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Descargar fondo",
+                    "\uE001 Volver"
+                },
+                {
+                    "\uE002 Abrir menú",
+                    "\uE003 Previsualizar fondo"
+                },
+                {
+                    "\uE004 Página anterior",
+                    "\uE005 Página siguiente"
+                },
+                {
+                    NULL,
+                    "Salir"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Descargar insignias",
+                    "\uE001 Volver"
+                },
+                {
+                    "\uE002 Abrir menú",
+                    "\uE003 Previsualizar insignias"
+                },
+                {
+                    "\uE004 Pagina anterior",
+                    "\uE005 Pagina siguiente"
+                },
+                {
+                    NULL,
+                    "Salir"
+                }
+            }
+        }
+    },
+
+.remote_v2_extra_instructions =
+    {
+        {
+            .info_line = "\uE001 Dejar menú extra",
+            .instructions = {
+                {
+                    "\uE079 Saltar a la página",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Cambiar Insignias",
+                    "\uE005 Cambiar Splashes"
+                },
+                {
+                    NULL,
+                    "Salir"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Dejar menú extra",
+            .instructions = {
+                {
+                    "\uE079 Saltar a la página",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
                 },
                 {
                     "\uE004 Cambiar Temas",
@@ -1316,6 +1584,140 @@ const Language_s language_french = {
             },
         }
     },
+
+.remote_v2_instructions =
+    {
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Télécharger",
+                    "\uE001 Retour"
+                },
+                {
+                    "\uE002 Ouvrir le menu",
+                    "\uE003 Aperçu"
+                },
+                {
+                    "\uE004 Page précédente",
+                    "\uE005 Page suivante"
+                },
+                {
+                    NULL,
+                    "Quitter"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Télécharger",
+                    "\uE001 Retour"
+                },
+                {
+                    "\uE002 Ouvrir le menu",
+                    "\uE003 Aperçu"
+                },
+                {
+                    "\uE004 Page précédente",
+                    "\uE005 Page suivante"
+                },
+                {
+                    NULL,
+                    "Quitter"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Télécharger",
+                    "\uE001 Retour"
+                },
+                {
+                    "\uE002 Ouvrir le menu",
+                    "\uE003 Aperçu"
+                },
+                {
+                    "\uE004 Page précédente",
+                    "\uE005 Page suivante"
+                },
+                {
+                    NULL,
+                    "Quitter"
+                }
+            }
+        }
+    },
+
+.remote_v2_extra_instructions =
+    {
+        {
+            .info_line = "\uE001 Retour",
+            .instructions = {
+                {
+                    "\uE079 Aller à la page",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Naviguer les Badges",
+                    "\uE005 Naviguer les Splashs"
+                },
+                {
+                    NULL,
+                    "Quitter"
+                }
+            },
+        },
+                {
+            .info_line = "\uE001 Retour",
+            .instructions = {
+                {
+                    "\uE079 Aller à la page",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Naviguer les Thèmes",
+                    "\uE005 Naviguer les Badges"
+                },
+                {
+                    NULL,
+                    "Quitter"
+                }
+            },
+        },
+                {
+            .info_line = "\uE001 Retour",
+            .instructions = {
+                {
+                    "\uE079 Aller à la page",
+                    "\uE07A Tags de recherche"
+                },
+                {
+                    NULL,
+                    "\uE07C Actualiser sans cache"
+                },
+                {
+                    "\uE004 Naviguer les Splashs",
+                    "\uE005 Naviguer les Thèmes"
+                },
+                {
+                    NULL,
+                    "Quitter"
+                }
+            },
+        }
+    },
     .splashes =
     {
         .no_splash_found = "Aucun splash.bin ou splashbottom.bin trouvé.\nEst-ce un splash?",
@@ -1719,6 +2121,140 @@ const Language_s language_portuguese = {
                 {
                     NULL,
                     "\uE07C Recarregar sem cache"
+                },
+                {
+                    "\uE004 Mudar p. Temas",
+                    "\uE005 Mudar p. Insígnias"
+                },
+                {
+                    NULL,
+                    "Sair"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Voltar",
+            .instructions = {
+                {
+                    "\uE079 Ir à página",
+                    "\uE07A Pesquisar tags"
+                },
+                {
+                    NULL,
+                    "\uE07C Recarregar sem cache"
+                },
+                {
+                    "\uE004 Mudar p. Splashes",
+                    "\uE005 Mudar p. Temas"
+                },
+                {
+                    NULL,
+                    "Sair"
+                }
+            }
+        },
+    },
+
+.remote_v2_instructions =
+    {
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Baixar Tema",
+                    "\uE001 Voltar"
+                },
+                {
+                    "\uE002 Abrir menu",
+                    "\uE003 Pré-visualizar"
+                },
+                {
+                    "\uE004 Página anterior",
+                    "\uE005 Próxima página"
+                },
+                {
+                    NULL,
+                    "Sair"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Baixar Splash",
+                    "\uE001 Voltar"
+                },
+                {
+                    "\uE002 Abrir menu",
+                    "\uE003 Pré-visualizar"
+                },
+                {
+                    "\uE004 Página anterior",
+                    "\uE005 Próxima página"
+                },
+                {
+                    NULL,
+                    "Sair"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Baixar Insígnias",
+                    "\uE001 Voltar"
+                },
+                {
+                    "\uE002 Abrir menu",
+                    "\uE003 Pré-visualizar"
+                },
+                {
+                    "\uE004 Página anterior",
+                    "\uE005 Próxima página"
+                },
+                {
+                    NULL,
+                    "Sair"
+                }
+            }
+        }
+    },
+
+.remote_v2_extra_instructions =
+    {
+        {
+            .info_line = "\uE001 Voltar",
+            .instructions = {
+                {
+                    "\uE079 排序菜单",
+                    NULL
+                },
+                {
+                    "\uE07B 导出菜单",
+                    NULL
+                },
+                {
+                    "\uE004 跳转列表",
+                    NULL
+                },
+                {
+                    NULL,
+                    "Sair"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Voltar",
+            .instructions = {
+                {
+                    "\uE079 Ir à página",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
                 },
                 {
                     "\uE004 Mudar p. Temas",
@@ -2191,6 +2727,140 @@ const Language_s language_korean = {
             }
         }
     },
+
+.remote_v2_instructions =
+    {
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Download theme",
+                    "\uE001 Go back"
+                },
+                {
+                    "\uE002 Filter",
+                    "\uE003 Preview theme"
+                },
+                {
+                    "\uE004 Previous page",
+                    "\uE005 Next page"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Download splash",
+                    "\uE001 Go back"
+                },
+                {
+                    "\uE002 Filter",
+                    "\uE003 Preview splash"
+                },
+                {
+                    "\uE004 Previous page",
+                    "\uE005 Next page"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 Download badges",
+                    "\uE001 Go back"
+                },
+                {
+                    "\uE002 Filter",
+                    "\uE003 Preview badges"
+                },
+                {
+                    "\uE004 Previous page",
+                    "\uE005 Next page"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        }
+    },
+
+.remote_v2_extra_instructions =
+    {
+        {
+            .info_line = "\uE001 Leave extra menu",
+            .instructions = {
+                {
+                    "\uE079 Jump to page",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Go to Badges",
+                    "\uE005 Go to Splashes"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Leave extra menu",
+            .instructions = {
+                {
+                    "\uE079 Jump to page",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 Go to Themes",
+                    "\uE005 Go to Badges"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 Leave extra menu",
+            .instructions = {
+                {
+                    "\uE079 Jump to page",
+                    NULL
+                },
+                {
+                    NULL,
+                    "\uE07C Reload w/o cache"
+                },
+                {
+                    "\uE004 Go to Splashes",
+                    "\uE005 Go to Themes"
+                },
+                {
+                    NULL,
+                    "Exit"
+                }
+            }
+        }
+    },
     .splashes =
     {
         .no_splash_found = "No splash.bin or splashbottom.bin found.\nIs this a splash?",
@@ -2594,6 +3264,140 @@ const Language_s language_SChinese = {
                 {
                     NULL,
                     "\uE07C 不使用缓存重载"
+                },
+                {
+                    "\uE004 选择主题",
+                    "\uE005 选择徽章"
+                },
+                {
+                    NULL,
+                    "退出"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 退出更多选项",
+            .instructions = {
+                {
+                    "\uE079 跳转页面",
+                    "\uE07A 搜索关键词"
+                },
+                {
+                    NULL,
+                    "\uE07C 不使用缓存重载"
+                },
+                {
+                    "\uE004 选择开机图画",
+                    "\uE005 选择主题"
+                },
+                {
+                    NULL,
+                    "退出"
+                }
+            }
+        }
+    },
+
+.remote_v2_instructions =
+    {
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 下载主题",
+                    "\uE001 返回"
+                },
+                {
+                    "\uE002 打开菜单",
+                    "\uE003 预览主题"
+                },
+                {
+                    "\uE004 上一页",
+                    "\uE005 下一页"
+                },
+                {
+                    NULL,
+                    "退出"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 下载开机图画",
+                    "\uE001 返回"
+                },
+                {
+                    "\uE002 打开菜单",
+                    "\uE003 预览开机图画"
+                },
+                {
+                    "\uE004 上一页",
+                    "\uE005 下一页"
+                },
+                {
+                    NULL,
+                    "退出"
+                }
+            }
+        },
+        {
+            .info_line = NULL,
+            .instructions = {
+                {
+                    "\uE000 下载徽章",
+                    "\uE001 返回"
+                },
+                {
+                    "\uE002 打开菜单",
+                    "\uE003 预览徽章"
+                },
+                {
+                    "\uE004 上一页",
+                    "\uE005 下一页"
+                },
+                {
+                    NULL,
+                    "退出"
+                }
+            }
+        }
+    },
+
+.remote_v2_extra_instructions =
+    {
+        {
+            .info_line = "\uE001 退出更多选项",
+            .instructions = {
+                {
+                    "\uE079 跳转页面",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
+                },
+                {
+                    "\uE004 选择徽章",
+                    "\uE005 选择开机画面"
+                },
+                {
+                    NULL,
+                    "退出"
+                }
+            }
+        },
+        {
+            .info_line = "\uE001 退出更多选项",
+            .instructions = {
+                {
+                    "\uE079 跳转页面",
+                    NULL
+                },
+                {
+                    NULL,
+                    NULL
                 },
                 {
                     "\uE004 选择主题",

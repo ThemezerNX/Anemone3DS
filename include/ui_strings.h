@@ -187,6 +187,8 @@ typedef struct {
     Remote_Strings_s remote;
     Instructions_s remote_instructions[REMOTE_MODE_AMOUNT];
     Instructions_s remote_extra_instructions[3];
+    Instructions_s remote_v2_instructions[REMOTE_MODE_AMOUNT];
+    Instructions_s remote_v2_extra_instructions[3];
     Splashes_Strings_s splashes;
     Themes_Strings_s themes;
     Badge_Strings_s badges;

@@ -762,12 +762,13 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
         }
         else
         {
-            Instructions_s instructions = language.remote_instructions[mode];
+            Instructions_s instructions = is_remote_provider_v2(provider)
+                ? language.remote_v2_instructions[mode]
+                : language.remote_instructions[mode];
             if (extra_mode)
-                instructions = language.remote_extra_instructions[mode];
-
-            instructions.instructions[BUTTONS_INFO_LINES-1][0] = NULL;
-            instructions.instructions[BUTTONS_INFO_LINES-1][1] = NULL;
+                instructions = is_remote_provider_v2(provider)
+                    ? language.remote_v2_extra_instructions[mode]
+                    : language.remote_extra_instructions[mode];
 
             if (is_remote_provider_v2(provider))
                 remote_v2_lock_texture();
@@ -828,11 +829,15 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
             }
             else if (kDown & KEY_DRIGHT)
             {
+                if (is_remote_provider_v2(provider))
+                    continue;
                 extra_mode = false;
                 load_remote_list(current_list, current_list->tp_current_page, mode, provider, true);
             }
             else if (kDown & KEY_DDOWN)
             {
+                if (is_remote_provider_v2(provider))
+                    continue;
                 extra_mode = false;
                 search_menu(current_list);
             }
