@@ -569,7 +569,7 @@ static SwkbdCallbackResult fat32filter(void * user, const char ** ppMessage, con
 }
 
 // assumes the input buffer is a ZIP. if it isn't, why are you calling this?
-void save_zip_to_sd(char * filename, u32 size, char * buf, RemoteMode mode, RemoteProvider provider)
+void save_zip_to_sd(char * filename, u32 size, char * buf, RemoteMode mode, RemoteProvider provider, u16 * saved_path)
 {
     static char path_to_file[32761]; // FAT32 paths can be quite long.
     const int max_chars = 250;
@@ -702,6 +702,11 @@ renamed:
     }
 
     DEBUG("Saving to SD: %s\n", path_to_file);
+    if (saved_path != NULL)
+    {
+        memset(saved_path, 0, sizeof(u16) * 0x106);
+        utf8_to_utf16(saved_path, (u8 *)path_to_file, 0x106);
+    }
     remake_file(path, ArchiveSD, size);
     buf_to_file(size, path, ArchiveSD, buf);
 }

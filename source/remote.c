@@ -34,6 +34,8 @@
 #include "fs.h"
 #include "unicode.h"
 #include "music.h"
+#include "themes.h"
+#include "splashes.h"
 #include "urls.h"
 #include "conversion.h"
 #include "ui_strings.h"
@@ -551,7 +553,31 @@ static void download_remote_entry(Entry_s * entry, RemoteMode mode, RemoteProvid
     if (filename == NULL)
         filename = strdup("download.zip");
 
-    save_zip_to_sd(filename, zip_size, zip_buf, mode, provider);
+    u16 saved_path[0x106] = { 0 };
+    save_zip_to_sd(filename, zip_size, zip_buf, mode, provider, saved_path);
+
+    if (saved_path[0] != 0 && (mode == REMOTE_MODE_THEMES || mode == REMOTE_MODE_SPLASHES))
+    {
+        if (draw_confirm_no_interface("Do you want to install it now?"))
+        {
+            Entry_s installed_entry = { 0 };
+            memcpy(installed_entry.path, saved_path, sizeof(installed_entry.path));
+            installed_entry.is_zip = true;
+
+            if (mode == REMOTE_MODE_THEMES)
+            {
+                aptSetHomeAllowed(false);
+                draw_install(INSTALL_SINGLE);
+                (void)theme_install(&installed_entry);
+            }
+            else
+            {
+                draw_install(INSTALL_SPLASH);
+                splash_install(&installed_entry, SPLASH_INSTALL_NORMAL);
+            }
+        }
+    }
+
     free(filename);
     free(zip_buf);
 }
