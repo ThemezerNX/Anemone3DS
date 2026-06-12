@@ -407,8 +407,8 @@ static void draw_install_handler(InstallType type)
         C2D_Text * install_text = &text[type];
         draw_c2d_text_center(GFX_TOP, 120.0f, 0.5f, 0.8f, 0.8f, colors[COLOR_WHITE_BACKGROUND], install_text);
 
-        if(type == INSTALL_LOADING_REMOTE_THEMES)
-            draw_text_center(GFX_TOP, 168.0f, 0.5f, 0.55f, 0.55f, colors[COLOR_WHITE_BACKGROUND], "Press \uE001 to cancel");
+        if(type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES)
+            draw_text_center(GFX_TOP, 168.0f, 0.5f, 0.55f, 0.55f, colors[COLOR_WHITE_BACKGROUND], language.draw.cancel_loading);
     }
 }
 
@@ -422,7 +422,7 @@ void draw_install(InstallType type)
 
 void draw_loading_bar(u32 current, u32 max, InstallType type)
 {
-    if(type == INSTALL_LOADING_REMOTE_THEMES)
+    if(type == INSTALL_LOADING_REMOTE_THEMES || type == INSTALL_LOADING_REMOTE_SPLASHES || type == INSTALL_LOADING_REMOTE_BADGES)
     {
         hidScanInput();
         if(hidKeysDown() & KEY_B)
@@ -747,9 +747,10 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
     if (draw_mode == DRAW_MODE_LIST)
     {
         draw_image_tint(sprites_menu_idx, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y, accent_tint);
+        if(list_has_installed_entries(list))
+            draw_image_tint(sprites_uninstall_idx, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y, accent_tint);
         draw_image_tint(sprites_qr_idx, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y, accent_tint);
         draw_image_tint(sprites_browse_idx, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y, accent_tint);
-        draw_image_tint(sprites_uninstall_idx, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y, accent_tint);
         draw_text(TOOLBAR_LIST_TOP_MODE_X + 2.5, -3, 0.6, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], mode_switch_char[!current_mode]);
 
         draw_image_tint(sprites_preview_idx, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y, accent_tint);

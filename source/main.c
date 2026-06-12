@@ -442,8 +442,11 @@ int main(void)
         u32 kUp = hidKeysUp();
 
         current_list = &lists[current_mode];
+        bool uninstall_available = list_has_installed_entries(current_list);
 
         Instructions_s instructions = language.normal_instructions[current_mode];
+        if(current_mode == MODE_SPLASHES && !uninstall_available)
+            instructions.instructions[1][0] = NULL;
         if(install_mode)
             instructions = language.install_instructions;
         if(extra_mode)
@@ -783,30 +786,20 @@ int main(void)
                     {
                         if (toolbar_hit(x, y, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y))
                         {
-                            goto browse_remote;
+                            extra_index = 0;
                         }
-                        else if (BETWEEN(320-48, x, 320-24))
+                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_BADGE_X, TOOLBAR_TOP_Y))
                         {
-                            goto dump_single;
+                            load_icons_first(current_list, false);
+                            extra_mode = false;
+                            draw_mode = DRAW_MODE_LIST;
+                            extra_index = 1;
                         }
-                        else if (BETWEEN(320-72, x, 320-48))
+                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_FILTER_X, TOOLBAR_TOP_Y))
                         {
-                            switch (current_list->current_sort)
-                            {
-                                case SORT_NAME:
-                                    goto sort_author;
-                                    break;
-                                case SORT_AUTHOR:
-                                    goto sort_path;
-                                    break;
-                                case SORT_PATH:
-                                    goto sort_name;
-                                    break;
-                                default:
-                                    break;
-                            }
+                            extra_index = 2;
                         }
-                        else if (BETWEEN(320-96, x, 320-72))
+                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_DUMP_X, TOOLBAR_TOP_Y))
                         {
                             goto badge_install;
                         }
@@ -993,7 +986,7 @@ int main(void)
                     toggle_shuffle(current_list);
                     break;
                 case MODE_SPLASHES:
-                    if(draw_confirm(language.main.uninstall_confirm, current_list, draw_mode))
+                    if(uninstall_available && draw_confirm(language.main.uninstall_confirm, current_list, draw_mode))
                     {
                         draw_install(INSTALL_SPLASH_DELETE);
                         splash_delete();
@@ -1072,20 +1065,7 @@ int main(void)
             {
                 if(y < 24)
                 {
-                    if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y))
-                    {
-                        extra_mode = true;
-                        draw_mode = DRAW_MODE_EXTRA;
-                    }
-                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
-                    {
-                        goto enable_qr;
-                    }
-                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
-                    {
-                        goto browse_remote;
-                    }
-                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y))
+                    if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y) && uninstall_available)
                     {
                         switch(current_mode)
                         {
@@ -1111,6 +1091,19 @@ int main(void)
                             default:
                                 break;
                         }
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
+                    {
+                        goto enable_qr;
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
+                    {
+                        goto browse_remote;
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y))
+                    {
+                        extra_mode = true;
+                        draw_mode = DRAW_MODE_EXTRA;
                     }
                     else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MODE_X, TOOLBAR_TOP_Y))
                     {

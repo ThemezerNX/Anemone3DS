@@ -158,9 +158,9 @@ enum {
 
     TOOLBAR_LIST_TOP_MENU_X = 2,
 
-    TOOLBAR_LIST_TOP_QR_X = 320 - 96,
-    TOOLBAR_LIST_TOP_BROWSE_X = 320 - 72,
-    TOOLBAR_LIST_TOP_UNINSTALL_X = 320 - 48,
+    TOOLBAR_LIST_TOP_UNINSTALL_X = 320 - 96,
+    TOOLBAR_LIST_TOP_QR_X = 320 - 72,
+    TOOLBAR_LIST_TOP_BROWSE_X = 320 - 48,
     TOOLBAR_LIST_TOP_MODE_X = 320 - 24,
 
     TOOLBAR_EXTRA_RELOAD_X = 320 - 96,
@@ -195,6 +195,20 @@ typedef struct {
 static inline bool toolbar_hit(int x, int y, int button_x, int button_y)
 {
     return BETWEEN(button_x, x, button_x + TOOLBAR_BUTTON_WIDTH) && BETWEEN(button_y, y, button_y + TOOLBAR_BUTTON_HEIGHT);
+}
+
+static inline bool list_has_installed_entries(const Entry_List_s * list)
+{
+    if(list == NULL || list->entries == NULL)
+        return false;
+
+    for(int i = 0; i < list->entries_count; i++)
+    {
+        if(list->entries[i].installed)
+            return true;
+    }
+
+    return false;
 }
 
 static inline bool toolbar_hit_rect(int x, int y, int rect_x, int rect_y, int rect_width, int rect_height)

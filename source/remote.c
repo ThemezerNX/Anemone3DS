@@ -1503,6 +1503,9 @@ redirect: // goto here if we need to redirect
 #define ERROR_BUFFER_SIZE 0x80
     char err_buf[ERROR_BUFFER_SIZE];
     Result res;
+    const bool can_cancel_loading = install_type == INSTALL_LOADING_REMOTE_THEMES
+        || install_type == INSTALL_LOADING_REMOTE_SPLASHES
+        || install_type == INSTALL_LOADING_REMOTE_BADGES;
     ParseResult parse = parse_header(&_header, &context, acceptable_mime_types);
     switch (parse)
     {
@@ -1674,7 +1677,7 @@ no_error:;
     do
     {
         hidScanInput();
-        if (install_type == INSTALL_LOADING_REMOTE_THEMES && (hidKeysDown() & KEY_B))
+        if (can_cancel_loading && (hidKeysDown() & KEY_B))
         {
             httpcCloseContext(&context);
             free(*buf);
