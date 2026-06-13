@@ -104,13 +104,21 @@ void splash_check_installed(void * void_arg)
 
     #define HASH_SIZE_BYTES 256/8
     u8 top_hash[HASH_SIZE_BYTES] = {0};
-    FSUSER_UpdateSha256Context(top_buf, top_size, top_hash);
+    if (top_size)
+        FSUSER_UpdateSha256Context(top_buf, top_size, top_hash);
     free(top_buf);
     top_buf = NULL;
     u8 bottom_hash[HASH_SIZE_BYTES] = {0};
-    FSUSER_UpdateSha256Context(bottom_buf, bottom_size, bottom_hash);
+    if (bottom_size)
+        FSUSER_UpdateSha256Context(bottom_buf, bottom_size, bottom_hash);
     free(bottom_buf);
     bottom_buf = NULL;
+
+    for(int i = 0; i < list->entries_count; ++i)
+        list->entries[i].installed = false;
+
+    int top_match = -1;
+    int bottom_match = -1;
 
     for(int i = 0; i < list->entries_count && arg->run_thread; i++)
     {
@@ -123,20 +131,43 @@ void splash_check_installed(void * void_arg)
             continue;
         }
 
-        u8 splash_top_hash[HASH_SIZE_BYTES] = {0};
-        FSUSER_UpdateSha256Context(top_buf, top_size, splash_top_hash);
+        bool matches_top = false;
+        bool matches_bottom = false;
+
+        if (top_size && top_buf)
+        {
+            u8 splash_top_hash[HASH_SIZE_BYTES] = {0};
+            FSUSER_UpdateSha256Context(top_buf, top_size, splash_top_hash);
+            matches_top = memcmp(splash_top_hash, top_hash, HASH_SIZE_BYTES) == 0;
+        }
+
+        if (bottom_size && bottom_buf)
+        {
+            u8 splash_bottom_hash[HASH_SIZE_BYTES] = {0};
+            FSUSER_UpdateSha256Context(bottom_buf, bottom_size, splash_bottom_hash);
+            matches_bottom = memcmp(splash_bottom_hash, bottom_hash, HASH_SIZE_BYTES) == 0;
+        }
+
         free(top_buf);
         top_buf = NULL;
-        u8 splash_bottom_hash[HASH_SIZE_BYTES] = {0};
-        FSUSER_UpdateSha256Context(bottom_buf, bottom_size, splash_bottom_hash);
         free(bottom_buf);
         bottom_buf = NULL;
 
-        if(!memcmp(splash_bottom_hash, bottom_hash, HASH_SIZE_BYTES) && !memcmp(splash_top_hash, top_hash, HASH_SIZE_BYTES))
+        if(matches_top && matches_bottom)
         {
             splash->installed = true;
             break;
         }
+
+        if(matches_top)
+            top_match = i;
+        if(matches_bottom)
+            bottom_match = i;
     }
+
+    if (top_match >= 0)
+        list->entries[top_match].installed = true;
+    if (bottom_match >= 0)
+        list->entries[bottom_match].installed = true;
     #endif
 }
