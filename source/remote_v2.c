@@ -43,7 +43,6 @@ const char * remote_v2_kind_path[REMOTE_MODE_AMOUNT] = {
 typedef struct {
     Entry_List_s * list;
     Handle texture_mutex;
-    bool ignore_cache;
 } RemoteV2_IconLoader_s;
 
 static Thread remote_v2_icon_thread = {0};
@@ -105,12 +104,10 @@ static void copy_linear_rgb565_texture_data(C3D_Tex * texture, const u16 * src, 
     GSPGPU_InvalidateDataCache(texture->data, texture->size);
 }
 
-static bool load_remote_v2_icon(RemoteV2_IconHttpSession_s * session, Entry_s * entry, C3D_Tex * into_tex, const Entry_Icon_s * icon_info, bool ignore_cache, Handle texture_mutex, u64 start_ms)
+static bool load_remote_v2_icon(RemoteV2_IconHttpSession_s * session, Entry_s * entry, C3D_Tex * into_tex, const Entry_Icon_s * icon_info, Handle texture_mutex, u64 start_ms)
 {
     char * icon_png = NULL;
     u32 icon_size = 0;
-
-    (void)ignore_cache;
 
     if (entry->remote_icon_url == NULL)
         return false;
@@ -214,7 +211,7 @@ static void load_remote_v2_icons_thread(void * void_arg)
     remote_v2_debug_elapsed(start_ms, "loading %d icons (slot cap %d)\n", load_count, icon_slot_count);
 
     for (int i = 0; arg->run_thread && i < load_count; ++i)
-        load_remote_v2_icon(&session, &list->entries[i], &list->icons_texture, &list->icons_info[i], loader->ignore_cache, loader->texture_mutex, start_ms);
+        load_remote_v2_icon(&session, &list->entries[i], &list->icons_texture, &list->icons_info[i], loader->texture_mutex, start_ms);
 
     remote_v2_icon_http_session_cleanup(&session);
     remote_v2_debug_elapsed(start_ms, "icon thread end\n");
@@ -228,7 +225,6 @@ static void reset_remote_v2_icon_state(void)
     remote_v2_icon_thread_arg.run_thread = false;
     remote_v2_icon_loader.list = NULL;
     remote_v2_icon_loader.texture_mutex = 0;
-    remote_v2_icon_loader.ignore_cache = false;
     remote_v2_icon_thread_args[0] = NULL;
 }
 
@@ -274,7 +270,7 @@ void remote_v2_stop_icon_thread(void)
     reset_remote_v2_icon_state();
 }
 
-void remote_v2_start_icon_thread(Entry_List_s * list, bool ignore_cache)
+void remote_v2_start_icon_thread(Entry_List_s * list)
 {
     remote_v2_stop_icon_thread();
 
@@ -283,7 +279,6 @@ void remote_v2_start_icon_thread(Entry_List_s * list, bool ignore_cache)
 
     remote_v2_icon_loader.list = list;
     remote_v2_icon_loader.texture_mutex = remote_v2_icon_texture_mutex;
-    remote_v2_icon_loader.ignore_cache = ignore_cache;
 
     remote_v2_icon_thread_args[0] = &remote_v2_icon_loader;
     remote_v2_icon_thread_arg.thread_arg = remote_v2_icon_thread_args;
@@ -304,10 +299,8 @@ const char * remote_v2_get_kind_path(RemoteMode mode)
     return remote_v2_kind_path[mode];
 }
 
-void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool ignore_cache, InstallType type)
+void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, InstallType type)
 {
-    (void)ignore_cache;
-
     if (loading_cancel_requested())
         return;
 
@@ -330,15 +323,15 @@ void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool igno
             continue;
 
         Entry_s * current_entry = &list->entries[i];
-        const char * remote_id = json_string_value(json_object_get(item, THEMEZER_JSON_ID));
-        const char * name = json_string_value(json_object_get(item, THEMEZER_JSON_NAME));
-        const char * author = json_string_value(json_object_get(item, THEMEZER_JSON_AUTHOR));
-        const char * description = json_string_value(json_object_get(item, THEMEZER_JSON_DESCRIPTION));
-        const char * icon_url = json_string_value(json_object_get(item, THEMEZER_JSON_ICON_URL));
-        const char * preview_url = json_string_value(json_object_get(item, THEMEZER_JSON_PREVIEW_URL));
-        const char * download_url = json_string_value(json_object_get(item, THEMEZER_JSON_DOWNLOAD_URL));
-        const char * audio_url = json_string_value(json_object_get(item, THEMEZER_JSON_AUDIO_URL));
-        const char * filename = json_string_value(json_object_get(item, THEMEZER_JSON_FILENAME));
+        const char * remote_id = json_string_value(json_object_get(item, "id"));
+        const char * name = json_string_value(json_object_get(item, "name"));
+        const char * author = json_string_value(json_object_get(item, "author"));
+        const char * description = json_string_value(json_object_get(item, "description"));
+        const char * icon_url = json_string_value(json_object_get(item, "iconUrl"));
+        const char * preview_url = json_string_value(json_object_get(item, "previewUrl"));
+        const char * download_url = json_string_value(json_object_get(item, "downloadUrl"));
+        const char * audio_url = json_string_value(json_object_get(item, "audioUrl"));
+        const char * filename = json_string_value(json_object_get(item, "filename"));
 
         current_entry->remote_id = remote_id ? strdup(remote_id) : NULL;
         current_entry->remote_icon_url = icon_url ? strdup(icon_url) : NULL;
@@ -349,10 +342,7 @@ void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool igno
 
         if (current_entry->remote_id)
         {
-            char * entry_path = NULL;
-            asprintf(&entry_path, THEMEZER_CACHE_PATH_FORMAT, current_entry->remote_id);
-            utf8_to_utf16(current_entry->path, (u8 *)entry_path, 0x106);
-            free(entry_path);
+            utf8_to_utf16(current_entry->path, (u8 *)current_entry->remote_id, 0x106);
         }
 
         set_remote_text_field(current_entry->name, 0x40, name, "No name");
@@ -362,12 +352,11 @@ void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool igno
     }
 }
 
-void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t page, bool ignore_cache, InstallType loading_screen)
+void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t page, InstallType loading_screen)
 {
     const char * key;
     json_t * value;
 
-    (void)ignore_cache;
     last_page = page;
 
     json_object_foreach(root, key, value)
@@ -375,9 +364,9 @@ void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t p
         if (loading_cancel_requested())
             return;
 
-        if (json_is_integer(value) && !strcmp(key, THEMEZER_JSON_PAGE_COUNT))
+        if (json_is_integer(value) && !strcmp(key, "pages"))
             list->tp_page_count = json_integer_value(value);
-        else if (json_is_array(value) && !strcmp(key, THEMEZER_JSON_PAGE_ITEMS))
+        else if (json_is_array(value) && !strcmp(key, "items"))
         {
             if (json_array_size(value) == 0)
             {
@@ -388,7 +377,7 @@ void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t p
             }
             else
             {
-                remote_v2_load_entries(list, value, ignore_cache, loading_screen);
+                remote_v2_load_entries(list, value, loading_screen);
             }
         }
     }

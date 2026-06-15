@@ -22,10 +22,10 @@ void remote_v2_cleanup_session(void);
 void remote_v2_lock_texture(void);
 void remote_v2_unlock_texture(void);
 void remote_v2_stop_icon_thread(void);
-void remote_v2_start_icon_thread(Entry_List_s * list, bool ignore_cache);
+void remote_v2_start_icon_thread(Entry_List_s * list);
 const char * remote_v2_get_kind_path(RemoteMode mode);
-void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t page, bool ignore_cache, InstallType loading_screen);
-void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, bool ignore_cache, InstallType type);
+void remote_v2_handle_page_json(Entry_List_s * list, json_t * root, json_int_t page, InstallType loading_screen);
+void remote_v2_load_entries(Entry_List_s * list, json_t * items_array, InstallType type);
 Result curl_http_get(const char * url, char ** filename, char ** buf, u32 * size, const char * acceptable_mime_types, InstallType install_type);
 
 #endif

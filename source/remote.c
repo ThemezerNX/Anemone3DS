@@ -200,7 +200,7 @@ bool browse_remote_provider(RemoteProvider provider, RemoteMode mode)
 static void restart_remote_icon_loader_if_needed(Entry_List_s * list, RemoteProvider provider)
 {
     if (is_remote_provider_v2(provider))
-    remote_v2_start_icon_thread(list, false);
+        remote_v2_start_icon_thread(list);
 }
 
 static void free_icons(Entry_List_s * list)
@@ -367,7 +367,7 @@ static void load_remote_list(Entry_List_s * list, json_int_t page, RemoteMode mo
             if (provider == REMOTE_PROVIDER_THEMEPLAZA)
                 remote_legacy_handle_page_json(list, root, page, ignore_cache, loading_screen);
             else if (is_remote_provider_v2(provider))
-                remote_v2_handle_page_json(list, root, page, ignore_cache, loading_screen);
+                remote_v2_handle_page_json(list, root, page, loading_screen);
         }
         else
             DEBUG("json error on line %d: %s\n", error.line, error.text);
@@ -387,7 +387,7 @@ static void load_remote_list(Entry_List_s * list, json_int_t page, RemoteMode mo
         json_decref(root);
 
         if (is_remote_provider_v2(provider))
-            remote_v2_start_icon_thread(list, ignore_cache);
+            remote_v2_start_icon_thread(list);
     }
     else
         throw_error(language.remote.check_wifi, ERROR_LEVEL_WARNING);
