@@ -83,13 +83,9 @@ void splash_install(const Entry_s * splash, SplashInstallType install_type)
     }
 }
 
-void splash_check_installed(void * void_arg)
+#ifndef CITRA_MODE
+static void refresh_splash_installed_state(Entry_List_s * list, volatile bool * run_thread)
 {
-    Thread_Arg_s * arg = (Thread_Arg_s *)void_arg;
-    Entry_List_s * list = (Entry_List_s *)arg->thread_arg;
-    if(list == NULL || list->entries == NULL) return;
-
-    #ifndef CITRA_MODE
     char * top_buf = NULL;
     u32 top_size = file_to_buf(fsMakePath(PATH_ASCII, "/luma/splash.bin"), ArchiveSD, &top_buf);
     char * bottom_buf = NULL;
@@ -120,7 +116,7 @@ void splash_check_installed(void * void_arg)
     int top_match = -1;
     int bottom_match = -1;
 
-    for(int i = 0; i < list->entries_count && arg->run_thread; i++)
+    for(int i = 0; i < list->entries_count && (run_thread == NULL || *run_thread); i++)
     {
         Entry_s * splash = &list->entries[i];
         top_size = load_data("/splash.bin", splash, &top_buf);
@@ -169,5 +165,29 @@ void splash_check_installed(void * void_arg)
         list->entries[top_match].installed = true;
     if (bottom_match >= 0)
         list->entries[bottom_match].installed = true;
-    #endif
+    #undef HASH_SIZE_BYTES
+}
+#endif
+
+void splash_refresh_installed_state(Entry_List_s * list)
+{
+    if (list == NULL || list->entries == NULL)
+        return;
+
+#ifndef CITRA_MODE
+    refresh_splash_installed_state(list, NULL);
+#else
+    (void)list;
+#endif
+}
+
+void splash_check_installed(void * void_arg)
+{
+    Thread_Arg_s * arg = (Thread_Arg_s *)void_arg;
+    Entry_List_s * list = (Entry_List_s *)arg->thread_arg;
+    if(list == NULL || list->entries == NULL) return;
+
+#ifndef CITRA_MODE
+    refresh_splash_installed_state(list, &arg->run_thread);
+#endif
 }

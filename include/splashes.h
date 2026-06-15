@@ -38,6 +38,7 @@ typedef enum {
 
 void splash_delete(void);
 void splash_install(const Entry_s * splash, SplashInstallType install_type);
+void splash_refresh_installed_state(Entry_List_s * list);
 
 void splash_check_installed(void * void_arg);
 

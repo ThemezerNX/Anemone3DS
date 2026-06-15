@@ -450,15 +450,20 @@ static bool load_remote_preview(const Entry_s * entry, C2D_Image * preview_image
     bool ret = load_preview_from_buffer(preview_buf, preview_buf_size, preview_image, preview_offset, height);
     free(preview_buf);
 
-    if (ret && use_cache && fetched_preview) // only save the preview if it loaded correctly - isn't corrupted
+    if (ret && use_cache)
     {
-        ensure_remote_cache_directory(entry);
+        memcpy(&previous_path_preview, entry->path, 0x106 * sizeof(u16));
 
-        u16 path[0x107] = { 0 };
-        strucat(path, entry->path);
-        struacat(path, "/preview.png");
-        remake_file(fsMakePath(PATH_UTF16, path), ArchiveSD, preview_size);
-        buf_to_file(preview_size, fsMakePath(PATH_UTF16, path), ArchiveSD, preview_png);
+        if (fetched_preview) // only save the preview if it loaded correctly - isn't corrupted
+        {
+            ensure_remote_cache_directory(entry);
+
+            u16 path[0x107] = { 0 };
+            strucat(path, entry->path);
+            struacat(path, "/preview.png");
+            remake_file(fsMakePath(PATH_UTF16, path), ArchiveSD, preview_size);
+            buf_to_file(preview_size, fsMakePath(PATH_UTF16, path), ArchiveSD, preview_png);
+        }
     }
 
     free(preview_png);
