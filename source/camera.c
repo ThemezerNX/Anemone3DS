@@ -260,6 +260,14 @@ static bool update_qr(qr_data * data, struct quirc_data * scan_data)
     return false;
 }
 
+static RemoteProvider qr_url_provider(const char * url)
+{
+    if (url != NULL && strstr(url, THEMEPLAZA_BASE_URL) != NULL)
+        return REMOTE_PROVIDER_THEMEPLAZA;
+
+    return REMOTE_PROVIDER_THEMEZER;
+}
+
 static void start_qr(qr_data * data)
 {
     svcCreateEvent(&data->event_stop, RESET_STICKY);
@@ -396,8 +404,9 @@ bool init_qr(void)
 
                 if(mode != REMOTE_MODE_AMOUNT)
                 {
+                    RemoteProvider provider = qr_url_provider((const char *)scan_data->payload);
                     u16 saved_path[0x106] = {0};
-                    save_zip_to_sd(filename, zip_size, zip_buf, mode, REMOTE_PROVIDER_THEMEPLAZA, saved_path);
+                    save_zip_to_sd(filename, zip_size, zip_buf, mode, provider, saved_path);
                     if (saved_path[0] != 0 && draw_confirm_no_interface("Do you want to install it now?"))
                     {
                         Entry_s installed_entry = {0};
@@ -423,7 +432,8 @@ bool init_qr(void)
                     bool badge = draw_confirm_no_interface(language.camera.badge_question);
                     if (badge)
                     {
-                        save_zip_to_sd(filename, zip_size, zip_buf, REMOTE_MODE_BADGES, REMOTE_PROVIDER_THEMEPLAZA, NULL);
+                        RemoteProvider provider = qr_url_provider((const char *)scan_data->payload);
+                        save_zip_to_sd(filename, zip_size, zip_buf, REMOTE_MODE_BADGES, provider, NULL);
                         // don't set success since we don't need to reload lists for badge zips
                     } else
                     {
