@@ -63,7 +63,7 @@ static int curl_progress_cb(void *clientp, double dltotal, double dlnow, double 
 
     InstallType install_type = *(InstallType *)clientp;
     hidScanInput();
-    if (hidKeysDown() & KEY_B)
+    if (hidKeysHeld() & KEY_B)
     {
         set_loading_cancel_requested(true);
         return 1;
@@ -1740,7 +1740,7 @@ no_error:;
     do
     {
         hidScanInput();
-        if (hidKeysDown() & KEY_B)
+        if (hidKeysHeld() & KEY_B)
         {
             httpcCancelConnection(&context);
             httpcCloseContext(&context);

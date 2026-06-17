@@ -443,7 +443,7 @@ void draw_loading_bar(u32 current, u32 max, InstallType type)
     if(is_network_loading_type(type))
     {
         hidScanInput();
-        if(hidKeysDown() & KEY_B)
+        if(hidKeysHeld() & KEY_B)
             set_loading_cancel_requested(true);
     }
 
