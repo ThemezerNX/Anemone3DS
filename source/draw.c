@@ -424,7 +424,8 @@ static void draw_install_handler(InstallType type)
         if(!loading_bar_started && is_network_loading_type(type))
         {
             set_screen(bottom);
-            draw_text_center(GFX_BOTTOM, 110.0f, 0.5f, 0.7f, 0.7f, colors[COLOR_WHITE_BACKGROUND], language.draw.connecting_internet);
+            C2D_DrawRectSolid(60-1, 110-1, 0.5f, 200+2, 20+2, colors[COLOR_CURSOR]);
+            C2D_DrawRectSolid(60, 110, 0.5f, 0, 20, colors[COLOR_ACCENT]);
         }
     }
 }
