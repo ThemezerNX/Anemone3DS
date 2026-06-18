@@ -1012,19 +1012,19 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
 
                 if (y < 24)
                 {
-                    if (BETWEEN(2, x, 26))
+                    if (toolbar_hit(x, y, TOOLBAR_REMOTE_BACK_X, TOOLBAR_TOP_Y))
                     {
                         break;
                     }
-                    else if (BETWEEN(26, x, 196))
+                    else if (toolbar_hit(x, y, TOOLBAR_REMOTE_SEARCH_X, TOOLBAR_TOP_Y))
                     {
                         search_menu(current_list);
                     }
-                    else if (BETWEEN(TOOLBAR_REMOTE_FILTER_X, x, TOOLBAR_REMOTE_MODE_X))
+                    else if (toolbar_hit(x, y, TOOLBAR_REMOTE_FILTER_X, TOOLBAR_TOP_Y))
                     {
                         extra_mode = true;
                     }
-                    else if (BETWEEN(320 - 24, x, 320))
+                    else if (toolbar_hit(x, y, TOOLBAR_REMOTE_MODE_X, TOOLBAR_TOP_Y))
                     {
                         mode++;
                         mode %= REMOTE_MODE_AMOUNT;
@@ -1035,13 +1035,13 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
                         load_remote_list(current_list, 1, mode, provider, false);
                     }
                 }
-                else if (BETWEEN(216, y, 240))
+                else if (toolbar_hit(x, y, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y))
                 {
-                    if (BETWEEN(2, x, 26))
+                    if (toolbar_hit(x, y, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y))
                     {
                         goto toggle_preview;
                     }
-                    else if (BETWEEN(26, x, 50))
+                    else if (toolbar_hit(x, y, TOOLBAR_MAIN_INSTALL_X, TOOLBAR_BOTTOM_Y))
                     {
                         if (is_remote_provider_v2(provider))
                             remote_v2_stop_icon_thread();

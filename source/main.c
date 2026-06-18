@@ -517,10 +517,10 @@ int main(void)
                 u16 y = touch.py;
                 if (y < 24)
                 {
-                    if(BETWEEN(320-24, x, 320))
+                    if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MODE_X, TOOLBAR_TOP_Y))
                     {
                         goto switch_mode;
-                    } else if(BETWEEN(320-48, x, 320-24))
+                    } else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
                     {
                         switch(current_mode)
                         {
@@ -544,10 +544,10 @@ int main(void)
                             default:
                                 break;
                         }
-                    } else if(BETWEEN(320-72, x, 320-48))
+                    } else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
                     {
                         goto browse_remote;
-                    } else if(BETWEEN(320-96, x, 320-72))
+                    } else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y))
                     {
                         goto enable_qr;
                     }
@@ -657,19 +657,19 @@ int main(void)
                 {
                     if (y < 24)
                     {
-                        if (BETWEEN(320-24, x, 320))
+                        if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_MODE_X, TOOLBAR_TOP_Y))
                         {
                             goto install_theme_single;
-                        } else if (BETWEEN(320-48, x, 320-24))
+                        } else if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
                         {
                             goto install_theme_shuffle;
-                        } else if (BETWEEN(320-72, x, 320-48))
+                        } else if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
                         {
                             goto install_theme_no_bgm;
-                        } else if (BETWEEN(320-96, x, 320-72))
+                        } else if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y))
                         {
                             goto install_theme_bgm_only;
-                        } else if (BETWEEN(2, x, 26))
+                        } else if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y))
                         {
                             goto install_leave;
                         }
@@ -688,15 +688,15 @@ int main(void)
 
                     if (kDown & KEY_TOUCH && y < 24)
                     {
-                        if (BETWEEN(320-24, x, 320))
+                        if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_MODE_X, TOOLBAR_TOP_Y))
                         {
                             finish_splash_install(&install_mode, &draw_mode, current_list, current_entry, SPLASH_INSTALL_NORMAL);
                         }
-                        else if (BETWEEN(320-48, x, 320-24))
+                        else if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
                         {
                             finish_splash_install(&install_mode, &draw_mode, current_list, current_entry, SPLASH_INSTALL_BOTTOM);
                         }
-                        else if (BETWEEN(320-72, x, 320-48))
+                        else if (toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
                         {
                             finish_splash_install(&install_mode, &draw_mode, current_list, current_entry, SPLASH_INSTALL_TOP);
                         }
@@ -838,7 +838,7 @@ int main(void)
                 {
                     if (y < 24)
                     {
-                        if (BETWEEN(2, x, 26))
+                        if (toolbar_hit(x, y, TOOLBAR_REMOTE_BACK_X, TOOLBAR_TOP_Y))
                         {
                             extra_mode = false;
                             draw_mode = DRAW_MODE_LIST;
@@ -867,9 +867,9 @@ int main(void)
                             install_badges();
                         }
                     }
-                    else if (y >= 216)
+                    else if (y >= TOOLBAR_BOTTOM_Y)
                     {
-                        if (BETWEEN(2, x, 26))
+                        if (toolbar_hit(x, y, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y))
                         {
                             quit = true;
                         }
