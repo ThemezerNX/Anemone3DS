@@ -32,6 +32,7 @@
 
 #include "sprites.h"
 
+#include <stdio.h>
 #include <time.h>
 
 C3D_RenderTarget * top;
@@ -71,6 +72,16 @@ static const char *remote_mode_name[REMOTE_MODE_AMOUNT] = {
     "Splash mode",
     "Badge mode",
 };
+
+static void draw_remote_mode_title(Entry_List_s * list)
+{
+    char mode_title[64];
+    const char *provider_name = get_remote_provider_name(list->remote_provider);
+    const char *mode_name = remote_mode_name[list->mode];
+
+    snprintf(mode_title, sizeof(mode_title), "%s %s", provider_name, mode_name);
+    draw_text_center(GFX_TOP, 4, 0.5f, 0.5f, 0.5f, colors[COLOR_WHITE_ACCENT], mode_title);
+}
 
 void init_screens(void)
 {
@@ -601,14 +612,7 @@ void draw_grid_interface(Entry_List_s * list, Instructions_s instructions, int e
 {
     draw_base_interface();
     EntryMode current_mode = list->mode;
-
-    C2D_Text * mode_string[REMOTE_MODE_AMOUNT] = {
-        &text[TEXT_THEMEPLAZA_THEME_MODE],
-        &text[TEXT_THEMEPLAZA_SPLASH_MODE],
-        &text[TEXT_THEMEPLAZA_BADGE_MODE],
-    };
-
-    draw_c2d_text_center(GFX_TOP, 4, 0.5f, 0.5f, 0.5f, colors[COLOR_WHITE_ACCENT], mode_string[current_mode]);
+    draw_remote_mode_title(list);
 
     draw_instructions(instructions);
 
