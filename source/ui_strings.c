@@ -165,7 +165,7 @@ const Language_s language_english = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Sorting menu",
@@ -210,7 +210,7 @@ const Language_s language_english = {
 
     .badge_extra_instructions =
     {
-        .info_line = "\uE001 Leave extra menu",
+        .info_line = "\uE001 Close Menu",
         .instructions = {
             {
                 NULL,
@@ -426,7 +426,7 @@ const Language_s language_english = {
     .remote_extra_instructions =
     {
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -447,7 +447,7 @@ const Language_s language_english = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -468,7 +468,7 @@ const Language_s language_english = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -560,7 +560,7 @@ const Language_s language_english = {
 .remote_v2_extra_instructions =
     {
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -581,7 +581,7 @@ const Language_s language_english = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -602,7 +602,7 @@ const Language_s language_english = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -781,7 +781,7 @@ const Language_s language_spanish = {
             }
         },
         {
-            .info_line = "\uE001 Dejar menú extra",
+            .info_line = "\uE001 Cerrar menú",
             .instructions = {
                 {
                     "\uE079 Menú de clasificación",
@@ -825,7 +825,7 @@ const Language_s language_spanish = {
     },
     .badge_extra_instructions =
     {
-        .info_line = "\uE001 Dejar menú extra",
+        .info_line = "\uE001 Cerrar menú",
         .instructions = {
             {
                 NULL,
@@ -1041,7 +1041,7 @@ const Language_s language_spanish = {
     .remote_extra_instructions =
     {
         {
-            .info_line = "\uE001 Dejar menú extra",
+            .info_line = "\uE001 Cerrar menú",
             .instructions = {
                 {
                     "\uE079 Saltar a la página",
@@ -1062,7 +1062,7 @@ const Language_s language_spanish = {
             }
         },
         {
-            .info_line = "\uE001 Dejar menú extra",
+            .info_line = "\uE001 Cerrar menú",
             .instructions = {
                 {
                     "\uE079 Saltar a la página",
@@ -1083,7 +1083,7 @@ const Language_s language_spanish = {
             }
         },
         {
-            .info_line = "\uE001 Dejar menú extra",
+            .info_line = "\uE001 Cerrar menú",
             .instructions = {
                 {
                     "\uE079 Saltar a la página",
@@ -1175,7 +1175,7 @@ const Language_s language_spanish = {
 .remote_v2_extra_instructions =
     {
         {
-            .info_line = "\uE001 Dejar menú extra",
+            .info_line = "\uE001 Cerrar menú",
             .instructions = {
                 {
                     "\uE079 Saltar a la página",
@@ -1196,7 +1196,7 @@ const Language_s language_spanish = {
             }
         },
         {
-            .info_line = "\uE001 Dejar menú extra",
+            .info_line = "\uE001 Cerrar menú",
             .instructions = {
                 {
                     "\uE079 Saltar a la página",
@@ -1217,7 +1217,7 @@ const Language_s language_spanish = {
             }
         },
         {
-            .info_line = "\uE001 Dejar menú extra",
+            .info_line = "\uE001 Cerrar menú",
             .instructions = {
                 {
                     "\uE079 Saltar a la página",
@@ -1397,7 +1397,7 @@ const Language_s language_french = {
             }
         },
         {
-            .info_line = "\uE001 Retour",
+            .info_line = "\uE001 Fermer le menu",
             .instructions = {
                 {
                     "\uE079 Menu de tri",
@@ -1441,7 +1441,7 @@ const Language_s language_french = {
     },
     .badge_extra_instructions =
     {
-        .info_line = "\uE001 Retour",
+        .info_line = "\uE001 Fermer le menu",
         .instructions = {
             {
                 NULL,
@@ -1657,7 +1657,7 @@ const Language_s language_french = {
     .remote_extra_instructions =
     {
         {
-            .info_line = "\uE001 Retour",
+            .info_line = "\uE001 Fermer le menu",
             .instructions = {
                 {
                     "\uE079 Aller à la page",
@@ -1678,7 +1678,7 @@ const Language_s language_french = {
             },
         },
                 {
-            .info_line = "\uE001 Retour",
+            .info_line = "\uE001 Fermer le menu",
             .instructions = {
                 {
                     "\uE079 Aller à la page",
@@ -1699,7 +1699,7 @@ const Language_s language_french = {
             },
         },
                 {
-            .info_line = "\uE001 Retour",
+            .info_line = "\uE001 Fermer le menu",
             .instructions = {
                 {
                     "\uE079 Aller à la page",
@@ -1791,7 +1791,7 @@ const Language_s language_french = {
 .remote_v2_extra_instructions =
     {
         {
-            .info_line = "\uE001 Retour",
+            .info_line = "\uE001 Fermer le menu",
             .instructions = {
                 {
                     "\uE079 Aller à la page",
@@ -1812,7 +1812,7 @@ const Language_s language_french = {
             },
         },
                 {
-            .info_line = "\uE001 Retour",
+            .info_line = "\uE001 Fermer le menu",
             .instructions = {
                 {
                     "\uE079 Aller à la page",
@@ -1833,7 +1833,7 @@ const Language_s language_french = {
             },
         },
                 {
-            .info_line = "\uE001 Retour",
+            .info_line = "\uE001 Fermer le menu",
             .instructions = {
                 {
                     "\uE079 Aller à la page",
@@ -1991,7 +1991,7 @@ const Language_s language_portuguese = {
     .extra_instructions = 
     {
         {
-            .info_line = "\uE001 Voltar",
+            .info_line = "\uE001 Fechar menu",
             .instructions = {
                 {
                     "\uE079 Classificar por nome",
@@ -2056,7 +2056,7 @@ const Language_s language_portuguese = {
     },
     .badge_extra_instructions =
     {
-        .info_line = "\uE001 Voltar",
+        .info_line = "\uE001 Fechar menu",
         .instructions = {
             {
                 NULL,
@@ -2272,7 +2272,7 @@ const Language_s language_portuguese = {
     .remote_extra_instructions =
     {
         {
-            .info_line = "\uE001 Voltar",
+            .info_line = "\uE001 Fechar menu",
             .instructions = {
                 {
                     "\uE079 排序菜单",
@@ -2293,7 +2293,7 @@ const Language_s language_portuguese = {
             }
         },
         {
-            .info_line = "\uE001 Voltar",
+            .info_line = "\uE001 Fechar menu",
             .instructions = {
                 {
                     "\uE079 Ir à página",
@@ -2314,7 +2314,7 @@ const Language_s language_portuguese = {
             }
         },
         {
-            .info_line = "\uE001 Voltar",
+            .info_line = "\uE001 Fechar menu",
             .instructions = {
                 {
                     "\uE079 Ir à página",
@@ -2406,7 +2406,7 @@ const Language_s language_portuguese = {
 .remote_v2_extra_instructions =
     {
         {
-            .info_line = "\uE001 Voltar",
+            .info_line = "\uE001 Fechar menu",
             .instructions = {
                 {
                     "\uE079 排序菜单",
@@ -2427,7 +2427,7 @@ const Language_s language_portuguese = {
             }
         },
         {
-            .info_line = "\uE001 Voltar",
+            .info_line = "\uE001 Fechar menu",
             .instructions = {
                 {
                     "\uE079 Ir à página",
@@ -2448,7 +2448,7 @@ const Language_s language_portuguese = {
             }
         },
         {
-            .info_line = "\uE001 Voltar",
+            .info_line = "\uE001 Fechar menu",
             .instructions = {
                 {
                     "\uE079 Ir à página",
@@ -2629,7 +2629,7 @@ const Language_s language_korean = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump in the list",
@@ -2673,7 +2673,7 @@ const Language_s language_korean = {
     },
     .badge_extra_instructions =
     {
-        .info_line = "\uE001 Leave extra menu",
+        .info_line = "\uE001 Close Menu",
         .instructions = {
             {
                 NULL,
@@ -2890,7 +2890,7 @@ const Language_s language_korean = {
     .remote_extra_instructions =
     {
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -2911,7 +2911,7 @@ const Language_s language_korean = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -2932,7 +2932,7 @@ const Language_s language_korean = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -3024,7 +3024,7 @@ const Language_s language_korean = {
 .remote_v2_extra_instructions =
     {
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -3045,7 +3045,7 @@ const Language_s language_korean = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -3066,7 +3066,7 @@ const Language_s language_korean = {
             }
         },
         {
-            .info_line = "\uE001 Leave extra menu",
+            .info_line = "\uE001 Close Menu",
             .instructions = {
                 {
                     "\uE079 Jump to page",
@@ -3245,7 +3245,7 @@ const Language_s language_SChinese = {
             }
         },
         {
-            .info_line = "\uE001 退出更多选项",
+            .info_line = "\uE001 关闭菜单",
             .instructions = {
                 {
                     "\uE079 跳转列表",
@@ -3289,7 +3289,7 @@ const Language_s language_SChinese = {
     },
     .badge_extra_instructions =
     {
-        .info_line = "\uE001 退出更多选项",
+        .info_line = "\uE001 关闭菜单",
         .instructions = {
             {
                 NULL,
@@ -3505,7 +3505,7 @@ const Language_s language_SChinese = {
     .remote_extra_instructions =
     {
         {
-            .info_line = "\uE001 退出更多选项",
+            .info_line = "\uE001 关闭菜单",
             .instructions = {
                 {
                     "\uE079 跳转页面",
@@ -3526,7 +3526,7 @@ const Language_s language_SChinese = {
             }
         },
         {
-            .info_line = "\uE001 退出更多选项",
+            .info_line = "\uE001 关闭菜单",
             .instructions = {
                 {
                     "\uE079 跳转页面",
@@ -3547,7 +3547,7 @@ const Language_s language_SChinese = {
             }
         },
         {
-            .info_line = "\uE001 退出更多选项",
+            .info_line = "\uE001 关闭菜单",
             .instructions = {
                 {
                     "\uE079 跳转页面",
@@ -3639,7 +3639,7 @@ const Language_s language_SChinese = {
 .remote_v2_extra_instructions =
     {
         {
-            .info_line = "\uE001 退出更多选项",
+            .info_line = "\uE001 关闭菜单",
             .instructions = {
                 {
                     "\uE079 跳转页面",
@@ -3660,7 +3660,7 @@ const Language_s language_SChinese = {
             }
         },
         {
-            .info_line = "\uE001 退出更多选项",
+            .info_line = "\uE001 关闭菜单",
             .instructions = {
                 {
                     "\uE079 跳转页面",
@@ -3681,7 +3681,7 @@ const Language_s language_SChinese = {
             }
         },
         {
-            .info_line = "\uE001 退出更多选项",
+            .info_line = "\uE001 关闭菜单",
             .instructions = {
                 {
                     "\uE079 跳转页面",
