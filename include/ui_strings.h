@@ -43,11 +43,13 @@ typedef struct {
 typedef struct {
     const char *theme_mode;
     const char *splash_mode;
+    const char *badge_mode;
     const char *no_themes;
     const char *no_splashes;
     const char *qr_download;
     const char *switch_splashes;
     const char *switch_themes;
+    const char *switch_badges;
     const char *quit;
     const char *by;
     const char *selected;
@@ -82,6 +84,7 @@ typedef struct {
     const char *dump_all_official;
     const char *dump_badges;
     const char *install_badges;
+    const char *install_badges_button;
     const char *cancel_loading;
     float start_pos;
     const char *shuffle;
@@ -178,6 +181,7 @@ typedef struct {
     Instructions_s install_instructions;
     Instructions_s splash_install_instructions;
     Instructions_s extra_instructions[3];
+    Instructions_s badge_extra_instructions;
     Camera_Strings_s camera;
     Draw_Strings_s draw;
     FS_Strings_s fs;

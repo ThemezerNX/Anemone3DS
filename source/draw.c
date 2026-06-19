@@ -58,6 +58,7 @@ static bool is_network_loading_type(InstallType type)
 C2D_Text text[TEXT_AMOUNT];
 static const char * mode_switch_char[MODE_AMOUNT] = {
     "S",
+    "B",
     "T",
 };
 
@@ -116,6 +117,7 @@ void init_screens(void)
 
     C2D_TextParse(&text[TEXT_THEME_MODE], staticBuf, language.draw.theme_mode);
     C2D_TextParse(&text[TEXT_SPLASH_MODE], staticBuf, language.draw.splash_mode);
+    C2D_TextParse(&text[TEXT_BADGE_MODE], staticBuf, language.draw.badge_mode);
 
     C2D_TextParse(&text[TEXT_NO_THEME_FOUND], staticBuf, language.draw.no_themes);
     C2D_TextParse(&text[TEXT_NO_SPLASH_FOUND], staticBuf, language.draw.no_splashes);
@@ -124,6 +126,7 @@ void init_screens(void)
 
     C2D_TextParse(&text[TEXT_SWITCH_TO_SPLASHES], staticBuf, language.draw.switch_splashes);
     C2D_TextParse(&text[TEXT_SWITCH_TO_THEMES], staticBuf, language.draw.switch_themes);
+    C2D_TextParse(&text[TEXT_SWITCH_TO_BADGES], staticBuf, language.draw.switch_badges);
 
     C2D_TextParse(&text[TEXT_OR_START_TO_QUIT], staticBuf, language.draw.quit);
 
@@ -142,6 +145,7 @@ void init_screens(void)
     C2D_TextParse(&text[TEXT_ERROR_CONTINUE], staticBuf, language.draw.warn_continue);
 
     C2D_TextParse(&text[TEXT_CONFIRM_YES_NO], staticBuf, language.draw.yes_no);
+    C2D_TextParse(&text[TEXT_INSTALL_BADGES_BUTTON], staticBuf, language.draw.install_badges_button);
 
     C2D_TextParse(&text[TEXT_INSTALL_LOADING_THEMES], staticBuf, language.draw.load_themes);
     C2D_TextParse(&text[TEXT_INSTALL_LOADING_SPLASHES], staticBuf, language.draw.load_splash);
@@ -248,6 +252,18 @@ static void draw_c2d_text(float x, float y, float z, float scaleX, float scaleY,
 static void draw_bottom_version(float x)
 {
     draw_c2d_text(x, 219, 0.5f, 0.6f, 0.6f, colors[COLOR_WHITE_ACCENT], &text[TEXT_VERSION]);
+}
+
+static void draw_badge_install_button(void)
+{
+    const float width = 200.0f;
+    const float height = 48.0f;
+    const float x = 60.0f;
+    const float y = 96.0f;
+
+    C2D_DrawRectSolid(x - 2, y - 2, 0.55f, width + 4, height + 4, colors[COLOR_CURSOR]);
+    C2D_DrawRectSolid(x, y, 0.56f, width, height, colors[COLOR_ACCENT]);
+    draw_text_center(GFX_BOTTOM, y + 14.0f, 0.7f, 0.7f, 0.7f, colors[COLOR_WHITE_ACCENT], language.draw.install_badges_button);
 }
 
 void draw_text(float x, float y, float z, float scaleX, float scaleY, Color color, const char * text)
@@ -713,6 +729,7 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
     C2D_Text * mode_string[MODE_AMOUNT] = {
         &text[TEXT_THEME_MODE],
         &text[TEXT_SPLASH_MODE],
+        &text[TEXT_BADGE_MODE],
     };
 
     C2D_ImageTint accent_tint;
@@ -720,11 +737,36 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
 
     draw_c2d_text_center(GFX_TOP, 4, 0.5f, 0.5f, 0.5f, colors[COLOR_WHITE_ACCENT], mode_string[current_mode]);
 
+    if(current_mode == MODE_BADGES)
+    {
+        draw_instructions(instructions);
+
+        set_screen(bottom);
+        if(draw_mode == DRAW_MODE_LIST)
+        {
+            draw_image_tint(sprites_menu_idx, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y, accent_tint);
+            draw_image_tint(sprites_qr_idx, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y, accent_tint);
+            draw_image_tint(sprites_browse_idx, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y, accent_tint);
+            draw_text(TOOLBAR_LIST_TOP_MODE_X + 2.5f, -3, 0.6f, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], mode_switch_char[current_mode]);
+            draw_badge_install_button();
+        }
+        else if(draw_mode == DRAW_MODE_EXTRA)
+        {
+            C2D_DrawRectSolid(0, 216, 0.5f, 128, 24, colors[COLOR_ACCENT]);
+            draw_image_tint(sprites_exit_idx, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y, accent_tint);
+            draw_bottom_version(30);
+            C2D_DrawRectSolid(0, 24, 1.0f, 320, 240-48, C2D_Color32(0, 0, 0, 128));
+        }
+
+        return;
+    }
+
     if(list->entries == NULL || list->entries_count == 0)
     {
         C2D_Text * mode_found_string[MODE_AMOUNT] = {
             &text[TEXT_NO_THEME_FOUND],
             &text[TEXT_NO_SPLASH_FOUND],
+            NULL,
         };
 
         draw_c2d_text_center(GFX_TOP, 80, 0.5f, 0.7f, 0.7f, colors[COLOR_YELLOW], mode_found_string[current_mode]);
@@ -732,6 +774,7 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
 
         C2D_Text * mode_switch_string[MODE_AMOUNT] = {
             &text[TEXT_SWITCH_TO_SPLASHES],
+            &text[TEXT_SWITCH_TO_BADGES],
             &text[TEXT_SWITCH_TO_THEMES],
         };
 
@@ -751,7 +794,7 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
         draw_image_tint(sprites_browse_idx, 320-72, 0, accent_tint);
         draw_image_tint(sprites_exit_idx, 320-48, 0, accent_tint);
 
-        draw_text(320-24+2.5, -3, 0.6, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], mode_switch_char[!current_mode]);
+        draw_text(320-24+2.5, -3, 0.6, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], mode_switch_char[current_mode]);
 
         return;
     }
@@ -760,7 +803,9 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
 
     int selected_entry = list->selected_entry;
     Entry_s * current_entry = &list->entries[selected_entry];
-    draw_entry_info(current_entry);
+    // Local badge mode is a placeholder screen, so it has no entry details to render.
+    if(current_mode != MODE_BADGES)
+        draw_entry_info(current_entry);
 
     set_screen(bottom);
 
@@ -779,7 +824,7 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
             draw_image_tint(sprites_uninstall_idx, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y, accent_tint);
         draw_image_tint(sprites_qr_idx, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y, accent_tint);
         draw_image_tint(sprites_browse_idx, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y, accent_tint);
-        draw_text(TOOLBAR_LIST_TOP_MODE_X + 2.5, -3, 0.6, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], mode_switch_char[!current_mode]);
+        draw_text(TOOLBAR_LIST_TOP_MODE_X + 2.5, -3, 0.6, 1.0f, 0.9f, colors[COLOR_WHITE_ACCENT], mode_switch_char[current_mode]);
 
         draw_image_tint(sprites_preview_idx, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y, accent_tint);
         draw_image_tint(sprites_install_idx, TOOLBAR_MAIN_INSTALL_X, TOOLBAR_BOTTOM_Y, accent_tint);
@@ -808,10 +853,9 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
         } else if (draw_mode == DRAW_MODE_EXTRA)
         {
             draw_image_tint(sprites_back_idx, 2, 0, accent_tint);
-            draw_image_tint(sprites_filter_idx, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y, accent_tint);
-            draw_image_tint(sprites_reload_idx, TOOLBAR_EXTRA_BADGE_X, TOOLBAR_TOP_Y, accent_tint);
-            draw_image_tint(sprites_dump_idx, TOOLBAR_EXTRA_FILTER_X, TOOLBAR_TOP_Y, accent_tint);
-            draw_image_tint(sprites_badge_idx, TOOLBAR_EXTRA_DUMP_X, TOOLBAR_TOP_Y, accent_tint);
+            draw_image_tint(sprites_filter_idx, TOOLBAR_EXTRA_BADGE_X, TOOLBAR_TOP_Y, accent_tint);
+            draw_image_tint(sprites_reload_idx, TOOLBAR_EXTRA_FILTER_X, TOOLBAR_TOP_Y, accent_tint);
+            draw_image_tint(sprites_dump_idx, TOOLBAR_EXTRA_DUMP_X, TOOLBAR_TOP_Y, accent_tint);
             C2D_DrawRectSolid(0, 216, 0.5f, 128, 24, colors[COLOR_ACCENT]);
             draw_image_tint(sprites_exit_idx, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y, accent_tint);
             draw_bottom_version(30);

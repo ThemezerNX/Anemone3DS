@@ -69,12 +69,15 @@ const char * main_paths[REMOTE_MODE_AMOUNT] = {
 const int entries_per_screen_v[MODE_AMOUNT] = {
     4,
     4,
+    4,
 };
 const int entries_per_screen_h[MODE_AMOUNT] = { //for themeplaza browser
     6,
     6,
+    6,
 };
 const int entry_size[MODE_AMOUNT] = {
+    48,
     48,
     48,
 };
@@ -234,33 +237,36 @@ static void load_lists(Entry_List_s * lists)
         // so, get the power of two greater than or equal to:
         // - the size of the largest length (row or column) of icons for the width
         // - the size of all of those lengths to fit the total for the height
-        C3D_TexInit(&current_list->icons_texture,
-            next_or_equal_power_of_2(x_component * current_list->entry_size),
-            next_or_equal_power_of_2(y_component * current_list->entry_size * ICONS_OFFSET_AMOUNT),
-            GPU_RGB565);
-        C3D_TexSetFilter(&current_list->icons_texture, GPU_NEAREST, GPU_NEAREST);
-
-        const float inv_width = 1.0f / current_list->icons_texture.width;
-        const float inv_height = 1.0f / current_list->icons_texture.height;
-        current_list->icons_info = (Entry_Icon_s *)calloc(x_component * y_component * ICONS_OFFSET_AMOUNT, sizeof(Entry_Icon_s));
-        for(int j = 0; j < y_component * ICONS_OFFSET_AMOUNT; ++j)
+        if(i != MODE_BADGES)
         {
-            const int index = j * x_component;
-            for(int h = 0; h < x_component; ++h)
+            C3D_TexInit(&current_list->icons_texture,
+                next_or_equal_power_of_2(x_component * current_list->entry_size),
+                next_or_equal_power_of_2(y_component * current_list->entry_size * ICONS_OFFSET_AMOUNT),
+                GPU_RGB565);
+            C3D_TexSetFilter(&current_list->icons_texture, GPU_NEAREST, GPU_NEAREST);
+
+            const float inv_width = 1.0f / current_list->icons_texture.width;
+            const float inv_height = 1.0f / current_list->icons_texture.height;
+            current_list->icons_info = (Entry_Icon_s *)calloc(x_component * y_component * ICONS_OFFSET_AMOUNT, sizeof(Entry_Icon_s));
+            for(int j = 0; j < y_component * ICONS_OFFSET_AMOUNT; ++j)
             {
-                Entry_Icon_s * const icon_info = &current_list->icons_info[index + h];
-                icon_info->x = h * current_list->entry_size;
-                icon_info->y = j * current_list->entry_size;
-                icon_info->subtex.width = current_list->entry_size;
-                icon_info->subtex.height = current_list->entry_size;
-                icon_info->subtex.left = icon_info->x * inv_width;
-                icon_info->subtex.top = 1.0f - (icon_info->y * inv_height);
-                icon_info->subtex.right = icon_info->subtex.left + (icon_info->subtex.width * inv_width);
-                icon_info->subtex.bottom = icon_info->subtex.top - (icon_info->subtex.height * inv_height);
+                const int index = j * x_component;
+                for(int h = 0; h < x_component; ++h)
+                {
+                    Entry_Icon_s * const icon_info = &current_list->icons_info[index + h];
+                    icon_info->x = h * current_list->entry_size;
+                    icon_info->y = j * current_list->entry_size;
+                    icon_info->subtex.width = current_list->entry_size;
+                    icon_info->subtex.height = current_list->entry_size;
+                    icon_info->subtex.left = icon_info->x * inv_width;
+                    icon_info->subtex.top = 1.0f - (icon_info->y * inv_height);
+                    icon_info->subtex.right = icon_info->subtex.left + (icon_info->subtex.width * inv_width);
+                    icon_info->subtex.bottom = icon_info->subtex.top - (icon_info->subtex.height * inv_height);
+                }
             }
         }
 
-        Result res = load_entries(main_paths[i], current_list, loading_screen);
+        Result res = i == MODE_BADGES ? 0 : load_entries(main_paths[i], current_list, loading_screen);
         if(R_SUCCEEDED(res))
         {
             if(current_list->entries_count > current_list->entries_loaded * ICONS_OFFSET_AMOUNT)
@@ -460,7 +466,7 @@ int main(void)
             instructions = current_mode == MODE_SPLASHES ? language.splash_install_instructions : language.install_instructions;
         if(extra_mode)
         {
-            instructions = language.extra_instructions[extra_index];
+            instructions = current_mode == MODE_BADGES ? language.badge_extra_instructions : language.extra_instructions[extra_index];
         }
 
         if(preview_mode)
@@ -500,7 +506,66 @@ int main(void)
 
         if(kDown & KEY_START) quit = true;
 
-        if(current_list->entries_count == 0)
+        if(current_mode == MODE_BADGES && !extra_mode)
+        {
+            if(kDown & KEY_A)
+            {
+                draw_install(INSTALL_BADGES);
+                install_badges();
+                continue;
+            }
+            else if(kDown & KEY_B)
+            {
+                extra_mode = true;
+                draw_mode = DRAW_MODE_EXTRA;
+                continue;
+            }
+            else if(kDown & KEY_R)
+            {
+                goto enable_qr;
+            }
+            else if(kDown & KEY_L)
+            {
+                goto switch_mode;
+            }
+            else if(kDown & KEY_TOUCH)
+            {
+                touchPosition touch = {0};
+                hidTouchRead(&touch);
+
+                u16 x = touch.px;
+                u16 y = touch.py;
+
+                if(y < 24)
+                {
+                    if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y))
+                    {
+                        extra_mode = true;
+                        draw_mode = DRAW_MODE_EXTRA;
+                        continue;
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
+                    {
+                        goto enable_qr;
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
+                    {
+                        goto browse_remote;
+                    }
+                    else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MODE_X, TOOLBAR_TOP_Y))
+                    {
+                        goto switch_mode;
+                    }
+                }
+                else if(BETWEEN(60, x, 260) && BETWEEN(96, y, 144))
+                {
+                    draw_install(INSTALL_BADGES);
+                    install_badges();
+                    continue;
+                }
+            }
+        }
+        else if(current_list->entries_count == 0 && !extra_mode)
         {
             if (kDown & KEY_R)
             {
@@ -638,9 +703,9 @@ int main(void)
         }
 
         int selected_entry = current_list->selected_entry;
-        Entry_s * current_entry = &current_list->entries[selected_entry];
+        Entry_s * current_entry = current_list->entries == NULL ? NULL : &current_list->entries[selected_entry];
 
-        if(preview_mode || current_list->entries == NULL)
+        if(preview_mode || (current_list->entries == NULL && !extra_mode))
             goto touch;
 
 
@@ -828,6 +893,31 @@ int main(void)
         }
         else if(extra_mode)
         {
+            if(current_mode == MODE_BADGES)
+            {
+                if(kDown & KEY_B)
+                {
+                    extra_mode = false;
+                    draw_mode = DRAW_MODE_LIST;
+                }
+                else if((kDown | kHeld) & KEY_TOUCH)
+                {
+                    touchPosition touch = {0};
+                    hidTouchRead(&touch);
+                    u16 x = touch.px;
+                    u16 y = touch.py;
+                    if(kDown & KEY_TOUCH && y >= TOOLBAR_BOTTOM_Y)
+                    {
+                        if(toolbar_hit(x, y, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y))
+                        {
+                            quit = true;
+                        }
+                    }
+                }
+
+                continue;
+            }
+
             if((kDown | kHeld) & KEY_TOUCH)
             {
                 touchPosition touch = {0};
@@ -843,28 +933,20 @@ int main(void)
                             extra_mode = false;
                             draw_mode = DRAW_MODE_LIST;
                         }
-                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_RELOAD_X, TOOLBAR_TOP_Y))
+                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_BADGE_X, TOOLBAR_TOP_Y))
                         {
                             extra_index = 0;
                         }
-                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_BADGE_X, TOOLBAR_TOP_Y))
+                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_FILTER_X, TOOLBAR_TOP_Y))
                         {
                             load_icons_first(current_list, false);
                             extra_mode = false;
                             draw_mode = DRAW_MODE_LIST;
                             extra_index = 1;
                         }
-                        else if (toolbar_hit(x, y, TOOLBAR_EXTRA_FILTER_X, TOOLBAR_TOP_Y))
-                        {
-                            extra_index = 2;
-                        }
                         else if (toolbar_hit(x, y, TOOLBAR_EXTRA_DUMP_X, TOOLBAR_TOP_Y))
                         {
-                            extra_mode = false;
-                            extra_index = 1;
-                            draw_mode = DRAW_MODE_LIST;
-                            draw_install(INSTALL_BADGES);
-                            install_badges();
+                            extra_index = 2;
                         }
                     }
                     else if (y >= TOOLBAR_BOTTOM_Y)
@@ -891,8 +973,11 @@ int main(void)
                         && browse_remote_provider(provider, (RemoteMode) current_mode);
                     if(downloaded)
                     {
-                        current_mode = MODE_THEMES;
-                        load_lists(lists);
+                        if(current_mode != MODE_BADGES)
+                        {
+                            current_mode = MODE_THEMES;
+                            load_lists(lists);
+                        }
                     }
                     extra_mode = false;
                     draw_mode = DRAW_MODE_LIST;
@@ -909,14 +994,9 @@ int main(void)
                     draw_mode = DRAW_MODE_LIST;
                     extra_index = 1;
                 }
-                else if (kDown & KEY_DRIGHT)
+                else if(kDown & KEY_DRIGHT)
                 {
-                    badge_install:
-                    extra_mode = false;
-                    extra_index = 1;
-                    draw_mode = DRAW_MODE_LIST;
-                    draw_install(INSTALL_BADGES);
-                    install_badges();
+                    extra_index = 2;
                 }
                 else if(kDown & KEY_L)
                 {
