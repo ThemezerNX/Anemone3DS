@@ -245,6 +245,11 @@ static void draw_c2d_text(float x, float y, float z, float scaleX, float scaleY,
     C2D_DrawText(text, C2D_WithColor, x, y, z, scaleX, scaleY, color);
 }
 
+static void draw_bottom_version(float x)
+{
+    draw_c2d_text(x, 219, 0.5f, 0.6f, 0.6f, colors[COLOR_WHITE_ACCENT], &text[TEXT_VERSION]);
+}
+
 void draw_text(float x, float y, float z, float scaleX, float scaleY, Color color, const char * text)
 {
     C2D_Text c2d_text;
@@ -337,7 +342,6 @@ void draw_base_interface(void)
 
     C2D_DrawRectSolid(0, 0, 0.5f, 320, 24, colors[COLOR_ACCENT]);
     C2D_DrawRectSolid(0, 216, 0.5f, 320, 24, colors[COLOR_ACCENT]);
-    C2D_DrawText(&text[TEXT_VERSION], C2D_WithColor, 7, 219, 0.5f, 0.6f, 0.6f, colors[COLOR_WHITE_ACCENT]);
 
     set_screen(top);
 }
@@ -808,7 +812,9 @@ void draw_interface(Entry_List_s * list, Instructions_s instructions, DrawMode d
             draw_image_tint(sprites_reload_idx, TOOLBAR_EXTRA_BADGE_X, TOOLBAR_TOP_Y, accent_tint);
             draw_image_tint(sprites_dump_idx, TOOLBAR_EXTRA_FILTER_X, TOOLBAR_TOP_Y, accent_tint);
             draw_image_tint(sprites_badge_idx, TOOLBAR_EXTRA_DUMP_X, TOOLBAR_TOP_Y, accent_tint);
+            C2D_DrawRectSolid(0, 216, 0.5f, 128, 24, colors[COLOR_ACCENT]);
             draw_image_tint(sprites_exit_idx, TOOLBAR_MAIN_PREVIEW_X, TOOLBAR_BOTTOM_Y, accent_tint);
+            draw_bottom_version(30);
         }
     }
 
