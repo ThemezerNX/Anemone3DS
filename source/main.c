@@ -550,7 +550,17 @@ int main(void)
                     }
                     else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
                     {
-                        goto browse_remote;
+                        RemoteProvider provider = REMOTE_PROVIDER_THEMEPLAZA;
+                        const bool downloaded = select_remote_provider(&provider)
+                            && browse_remote_provider(provider, (RemoteMode) current_mode);
+                        if(downloaded)
+                        {
+                            if(current_mode != MODE_BADGES)
+                            {
+                                current_mode = MODE_THEMES;
+                                load_lists(lists);
+                            }
+                        }
                     }
                     else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MODE_X, TOOLBAR_TOP_Y))
                     {
@@ -611,7 +621,17 @@ int main(void)
                         }
                     } else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_QR_X, TOOLBAR_TOP_Y))
                     {
-                        goto browse_remote;
+                        RemoteProvider provider = REMOTE_PROVIDER_THEMEPLAZA;
+                        const bool downloaded = select_remote_provider(&provider)
+                            && browse_remote_provider(provider, (RemoteMode) current_mode);
+                        if(downloaded)
+                        {
+                            if(current_mode != MODE_BADGES)
+                            {
+                                current_mode = MODE_THEMES;
+                                load_lists(lists);
+                            }
+                        }
                     } else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_UNINSTALL_X, TOOLBAR_TOP_Y))
                     {
                         goto enable_qr;
@@ -967,21 +987,7 @@ int main(void)
                 }
                 else if(kDown & KEY_DLEFT)
                 {
-                    browse_remote:
-                    RemoteProvider provider = REMOTE_PROVIDER_THEMEPLAZA;
-                    const bool downloaded = select_remote_provider(&provider)
-                        && browse_remote_provider(provider, (RemoteMode) current_mode);
-                    if(downloaded)
-                    {
-                        if(current_mode != MODE_BADGES)
-                        {
-                            current_mode = MODE_THEMES;
-                            load_lists(lists);
-                        }
-                    }
-                    extra_mode = false;
-                    draw_mode = DRAW_MODE_LIST;
-                    extra_index = 1;
+                    extra_index = 2;
                 }
                 else if(kDown & KEY_DUP)
                 {
@@ -993,10 +999,6 @@ int main(void)
                     extra_mode = false;
                     draw_mode = DRAW_MODE_LIST;
                     extra_index = 1;
-                }
-                else if(kDown & KEY_DRIGHT)
-                {
-                    extra_index = 2;
                 }
                 else if(kDown & KEY_L)
                 {
@@ -1234,7 +1236,17 @@ int main(void)
                     }
                     else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_BROWSE_X, TOOLBAR_TOP_Y))
                     {
-                        goto browse_remote;
+                        RemoteProvider provider = REMOTE_PROVIDER_THEMEPLAZA;
+                        const bool downloaded = select_remote_provider(&provider)
+                            && browse_remote_provider(provider, (RemoteMode) current_mode);
+                        if(downloaded)
+                        {
+                            if(current_mode != MODE_BADGES)
+                            {
+                                current_mode = MODE_THEMES;
+                                load_lists(lists);
+                            }
+                        }
                     }
                     else if(toolbar_hit(x, y, TOOLBAR_LIST_TOP_MENU_X, TOOLBAR_TOP_Y))
                     {
