@@ -60,5 +60,6 @@
 
 // asks which site to browse, then opens the browser; returns whether something was downloaded
 bool browse_remote(RemoteMode mode);
+void offer_install_downloaded(const u16 * saved_path, RemoteMode mode);
 
 #endif

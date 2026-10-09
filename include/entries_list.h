@@ -97,6 +97,8 @@ typedef struct {
 
 // frees the entries of a remote list, including the Themezer fields
 void free_remote_entries(Entry_List_s * list);
+bool list_has_installed_entries(const Entry_List_s * list);
+void clear_installed_entries(Entry_List_s * list);
 
 void sort_by_name(Entry_List_s * list);
 void sort_by_author(Entry_List_s * list);

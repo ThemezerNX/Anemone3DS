@@ -366,6 +366,8 @@ bool init_qr(void)
 
         if(zip_size != 0)
         {
+            u16 saved_path[0x106] = {0};
+            RemoteMode saved_mode = REMOTE_MODE_AMOUNT;
             draw_install(INSTALL_CHECKING_DOWNLOAD);
 
             struct archive * a = archive_read_new();
@@ -409,7 +411,8 @@ bool init_qr(void)
 
                 if(mode != REMOTE_MODE_AMOUNT)
                 {
-                    save_zip_to_sd(filename, zip_size, zip_buf, mode, qr_url_provider((const char *)scan_data->payload));
+                    save_zip_to_sd(filename, zip_size, zip_buf, mode, qr_url_provider((const char *)scan_data->payload), saved_path);
+                    saved_mode = mode;
                     success = true;
                 }
                 else
@@ -417,7 +420,7 @@ bool init_qr(void)
                     bool badge = draw_confirm_no_interface(language.camera.badge_question);
                     if (badge)
                     {
-                        save_zip_to_sd(filename, zip_size, zip_buf, REMOTE_MODE_BADGES, qr_url_provider((const char *)scan_data->payload));
+                        save_zip_to_sd(filename, zip_size, zip_buf, REMOTE_MODE_BADGES, qr_url_provider((const char *)scan_data->payload), NULL);
                         // don't set success since we don't need to reload lists for badge zips
                     } else
                     {
@@ -429,7 +432,9 @@ bool init_qr(void)
             {
                 throw_error(language.camera.file_not_zip, ERROR_LEVEL_WARNING);
             }
+            // free the download first, installing needs a lot of memory
             free(zip_buf);
+            offer_install_downloaded(saved_path, saved_mode);
         }
         else
         {

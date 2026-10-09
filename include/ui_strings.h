@@ -43,11 +43,13 @@ typedef struct {
 typedef struct {
     const char *theme_mode;
     const char *splash_mode;
+    const char *badge_mode;
     const char *no_themes;
     const char *no_splashes;
     const char *qr_download;
     const char *switch_splashes;
     const char *switch_themes;
+    const char *switch_badges;
     const char *quit;
     const char *by;
     const char *selected;
@@ -68,6 +70,7 @@ typedef struct {
     const char *load_icons;
     const char *install_splash;
     const char *delete_splash;
+    const char *delete_theme;
     const char *install_theme;
     const char *install_shuffle;
     const char *install_bgm;
@@ -85,6 +88,7 @@ typedef struct {
     const char *dump_badges;
     const char *install_badges;
     const char *cancel_loading;
+    const char *install_badges_button;
     float start_pos;
     const char *shuffle;
 } Draw_Strings_s;
@@ -118,6 +122,7 @@ typedef struct {
     const char *too_many_themes;
     const char *not_enough_themes;
     const char *uninstall_confirm;
+    const char *uninstall_theme_confirm;
     const char *delete_confirm;
 } Main_Strings_s;
 
@@ -156,6 +161,7 @@ typedef struct {
     const char *http_unexpected;
     const char *select_source;
     const char *select_source_hint;
+    const char *install_now;
 } Remote_Strings_s;
 
 typedef struct {
@@ -170,6 +176,7 @@ typedef struct {
     const char *name_folder;
     const char *cancel;
     const char *done;
+    const char *uninstall_failed;
 } Themes_Strings_s;
 
 typedef struct {
@@ -179,6 +186,7 @@ typedef struct {
 typedef struct {
     Instructions_s normal_instructions[MODE_AMOUNT];
     Instructions_s install_instructions;
+    Instructions_s splash_install_instructions;
     Instructions_s extra_instructions[3];
     Camera_Strings_s camera;
     Draw_Strings_s draw;
