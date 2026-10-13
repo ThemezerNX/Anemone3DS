@@ -35,7 +35,8 @@
 // downloads from this host get Theme Plaza's own HTTP error messages ("Has this theme been approved?")
 #define THEMEPLAZA_BASE_URL "http://themeplaza.art"
 
-// asks which site to browse, then opens the browser; returns whether something was downloaded
-bool browse_remote(RemoteMode mode);
+// opens the browser for a site; returns whether something was downloaded
+bool browse_remote(RemoteMode mode, RemoteProvider provider);
+void offer_install_downloaded(const u16 * saved_path, RemoteMode mode);
 
 #endif

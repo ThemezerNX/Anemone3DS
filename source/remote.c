@@ -36,6 +36,8 @@
 #include "conversion.h"
 #include "ui_strings.h"
 #include "remote_api.h"
+#include "themes.h"
+#include "splashes.h"
 
 extern int __stacksize__;
 
@@ -191,9 +193,39 @@ static void download_remote_entry(Entry_s * entry, RemoteMode mode)
     if (filename == NULL && entry->remote_filename != NULL)
         filename = strdup(entry->remote_filename);
 
-    save_zip_to_sd(filename, zip_size, zip_buf, mode);
+    u16 saved_path[0x106] = {0};
+    save_zip_to_sd(filename, zip_size, zip_buf, mode, saved_path);
     free(filename);
     free(zip_buf);
+
+    offer_install_downloaded(saved_path, mode);
+}
+
+// ask to install a theme or splash right after it was downloaded to saved_path
+void offer_install_downloaded(const u16 * saved_path, RemoteMode mode)
+{
+    if (saved_path[0] == 0 || (mode != REMOTE_MODE_THEMES && mode != REMOTE_MODE_SPLASHES))
+        return;
+
+    if (!draw_confirm_no_interface(language.remote.install_now))
+        return;
+
+    Entry_s entry = {0};
+    memcpy(entry.path, saved_path, sizeof(entry.path));
+    entry.is_zip = true;
+
+    if (mode == REMOTE_MODE_THEMES)
+    {
+        aptSetHomeAllowed(false);
+        draw_install(INSTALL_SINGLE);
+        if (R_SUCCEEDED(theme_install(&entry)))
+            installed_themes = true;
+    }
+    else
+    {
+        draw_install(INSTALL_SPLASH);
+        splash_install(&entry, SPLASH_INSTALL_NORMAL);
+    }
 }
 
 static SwkbdCallbackResult
@@ -299,7 +331,7 @@ static void change_selected(Entry_List_s * list, int change_value)
     list->selected_entry = newval;
 }
 
-static bool remote_browser(RemoteMode mode, RemoteProvider provider)
+bool browse_remote(RemoteMode mode, RemoteProvider provider)
 {
     bool downloaded = false;
 
@@ -412,7 +444,6 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
 
         if (kDown & KEY_START)
         {
-        exit:
             quit = true;
             downloaded = false;
             break;
@@ -561,25 +592,21 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
 
                 if (y < 24)
                 {
-                    if (BETWEEN(0, x, 80))
+                    if (toolbar_hit(x, y, TOOLBAR_REMOTE_BACK_X, TOOLBAR_TOP_Y))
+                    {
+                        break;
+                    }
+                    else if (toolbar_hit_rect(x, y, TOOLBAR_REMOTE_SEARCH_X, TOOLBAR_TOP_Y, TOOLBAR_REMOTE_SEARCH_WIDTH, TOOLBAR_BUTTON_SIZE))
                     {
                         remote_icons_stop();
                         search_menu(current_list);
                         remote_icons_start(current_list);
                     }
-                    else if (BETWEEN(320 - 96, x, 320 - 72))
+                    else if (toolbar_hit(x, y, TOOLBAR_REMOTE_FILTER_X, TOOLBAR_TOP_Y))
                     {
-                        break;
+                        extra_mode = true;
                     }
-                    else if (BETWEEN(320 - 72, x, 320 - 48))
-                    {
-                        goto exit;
-                    }
-                    else if (BETWEEN(320 - 48, x, 320 - 24))
-                    {
-                        goto toggle_preview;
-                    }
-                    else if (BETWEEN(320 - 24, x, 320))
+                    else if (toolbar_hit(x, y, TOOLBAR_REMOTE_MODE_X, TOOLBAR_TOP_Y))
                     {
                         mode++;
                         mode %= REMOTE_MODE_AMOUNT;
@@ -590,6 +617,17 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
                         load_remote_list(current_list, 1, mode);
                         mode = (RemoteMode) current_list->mode;
                     }
+                }
+                else if (toolbar_hit(x, y, TOOLBAR_REMOTE_PREVIEW_X, TOOLBAR_BOTTOM_Y))
+                {
+                    goto toggle_preview;
+                }
+                else if (toolbar_hit(x, y, TOOLBAR_REMOTE_DOWNLOAD_X, TOOLBAR_BOTTOM_Y))
+                {
+                    remote_icons_stop();
+                    download_remote_entry(current_entry, mode);
+                    remote_icons_start(current_list);
+                    downloaded = true;
                 }
                 else if (BETWEEN(240 - 24, y, 240) && BETWEEN(176, x, 320))
                 {
@@ -644,55 +682,4 @@ static bool remote_browser(RemoteMode mode, RemoteProvider provider)
     free(last_search);
 
     return downloaded;
-}
-
-static bool select_remote_provider(RemoteProvider * provider)
-{
-    while (aptMainLoop() && !quit)
-    {
-        draw_remote_provider_picker(*provider);
-
-        hidScanInput();
-        u32 kDown = hidKeysDown();
-
-        if (kDown & KEY_START)
-            quit = true;
-        else if (kDown & KEY_B)
-            return false;
-        else if (kDown & KEY_A)
-            return true;
-        else if (kDown & (KEY_LEFT | KEY_L))
-            *provider = REMOTE_PROVIDER_THEMEPLAZA;
-        else if (kDown & (KEY_RIGHT | KEY_R))
-            *provider = REMOTE_PROVIDER_THEMEZER;
-        else if (kDown & KEY_TOUCH)
-        {
-            touchPosition touch = {0};
-            hidTouchRead(&touch);
-
-            const bool card_row = touch.py >= PROVIDER_CARD_Y && touch.py < PROVIDER_CARD_Y + PROVIDER_CARD_HEIGHT;
-            if (card_row && touch.px >= PROVIDER_CARD_THEMEPLAZA_X && touch.px < PROVIDER_CARD_THEMEPLAZA_X + PROVIDER_CARD_WIDTH)
-            {
-                *provider = REMOTE_PROVIDER_THEMEPLAZA;
-                return true;
-            }
-            else if (card_row && touch.px >= PROVIDER_CARD_THEMEZER_X && touch.px < PROVIDER_CARD_THEMEZER_X + PROVIDER_CARD_WIDTH)
-            {
-                *provider = REMOTE_PROVIDER_THEMEZER;
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-bool browse_remote(RemoteMode mode)
-{
-    // remembered while the app is open
-    static RemoteProvider provider = REMOTE_PROVIDER_THEMEPLAZA;
-    if (!select_remote_provider(&provider))
-        return false;
-
-    return remote_browser(mode, provider);
 }
