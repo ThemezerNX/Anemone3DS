@@ -33,9 +33,9 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 
 # Your values.
-APP_TITLE           :=	Anemone3DS
-APP_DESCRIPTION     :=	A complete theming tool for the 3DS
-APP_AUTHOR          :=	Anemone3DS Team
+APP_TITLE           :=	Themezer-3DS
+APP_DESCRIPTION     :=	A complete theming tool for the 3DS, based on Anemone3DS
+APP_AUTHOR          :=	Themezer and the Anemone3DS Team
 
 
 TARGET              :=	$(subst $e ,_,$(notdir $(APP_TITLE)))
@@ -63,15 +63,15 @@ LOGO                :=	meta/logo.bin
 
 # If left blank, makerom will use default values (0xff3ff and CTR-P-CTAP, respectively)
 # Be careful if UNIQUE_ID is the same as other apps: it will overwrite the previously installed one
-UNIQUE_ID           :=	0xBAFE0
-PRODUCT_CODE        :=	CTR-P-ANEM
+UNIQUE_ID           :=	0xC7E20
+PRODUCT_CODE        :=	CTR-P-TZ3D
 
 # Don't really need to change this
 ICON_FLAGS          :=	nosavebackups,visible
 
 # Where the update check reads the latest release, in the format of GitHub's releases API
 # (a URL that redirects there works too)
-UPDATE_URL          ?=  https://api.github.com/repos/astronautlevel2/Anemone3DS/releases/latest
+UPDATE_URL          ?=  https://3ds.themezer.net/app/releases/latest
 
 ifeq ($(strip $(NOGIT)),)
     VERSION           :=  $(shell git describe --tags --match v[0-9]* --abbrev=7 2>/dev/null | sed 's/-[0-9]*-g/-/')
