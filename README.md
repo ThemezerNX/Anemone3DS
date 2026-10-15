@@ -1,40 +1,61 @@
-![# Anemone3DS](https://github.com/astronautlevel2/Anemone3DS/blob/master/meta/banner.png)
+![Themezer-3DS](meta/banner.png)
 
-A Theme and Splashscreen Manager for the Nintendo 3DS, written in C.
+# Themezer-3DS
 
-# Dependencies
- * Make, Git and PKG-Config
- * devkitARM, which can be installed following the instructions [here](https://devkitpro.org/wiki/Getting_Started).
- * jansson, libvorbisidec, libpng, and libarchive, which can be retrieved from [devkitPro pacman](https://devkitpro.org/viewtopic.php?f=13&t=8702).
- * A recent build of [makerom](https://github.com/profi200/Project_CTR) and the latest release of [bannertool](https://github.com/Steveice10/bannertool). These must be added to your PATH.
+The theme manager for the Nintendo 3DS by [Themezer](https://themezer.net). Install themes, splash screens and
+badges from your SD card, or find new ones on Themezer and install them straight away.
 
-# Building
-First of all, make sure devkitARM is properly installed - `$DEVKITPRO` and `$DEVKITARM` should be set to `/opt/devkitpro` and `$DEVKITPRO/devkitARM`, respectively.  
-After that, open the directory you want to clone the repo into, and execute  
-`git clone https://github.com/astronautlevel2/Anemone3DS` (or any other cloning method).  
-To install the prerequisite libraries, begin by ensuring devkitPro pacman (and the base install group, `3ds-dev`) is installed, and then install the dkP packages `3ds-jansson`, `3ds-libvorbisidec`, `3ds-libpng`, `3ds-lz4`, `3ds-libarchive` and `3ds-curl` using `[sudo] [dkp-]pacman -S <package-name>`.  System wide packages `make`, `git` and `pkg-config` are also needed.
+Themezer-3DS is a fork of [Anemone3DS](https://github.com/astronautlevel2/Anemone3DS), rewritten from scratch.
 
-After adding [makerom](https://github.com/profi200/Project_CTR) and [bannertool](https://github.com/Steveice10/buildtools) to your PATH, just enter your directory and run `make`. All built binaries will be in `/out/`.
+## Installing
 
-# License
-This project is licensed under the GNU GPLv3. See LICENSE.md for details. Additional terms 7b and 7c apply to this project.
+- **CIA:** install `Themezer.cia` from the [latest release](https://github.com/ThemezerNX/themezer-3ds/releases/latest),
+  for example with FBI. It installs as its own app, next to Anemone3DS if you have it.
+- **3DSX:** copy `Themezer.3dsx` to `/3ds/` on your SD card and start it from the Homebrew Launcher.
 
-# Credits
-The following people contributed to Anemone3DS in some way. Without these people, Anemone3DS wouldn't exist, or wouldn't be as good as it is: [CONTRIBUTORS.md](CONTRIBUTORS.md)
+Themes, splash screens and badges are read from `/Themes`, `/Splashes` and `/Badges` on the SD card, the same folders
+Anemone3DS uses. The app keeps its settings and caches in `/3ds/Themezer`.
 
-Most of the icons under `romfs` are from the site [icons8.com](https://icons8.com) and are licensed under the [CC-BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/3.0/)
+## Building
 
-Special thanks go to these people who, whilst not directly contributing, helped immensely:
- * [Rinnegatamante](https://github.com/Rinnegatamante), whose code served as reference on theme installation.
- * [SteveIce10](https://github.com/SteveIce10), whose QR code in FBI was essential.
- * [BernardoGiordano](https://github.com/BernardoGiordano) for making pp2d, and being super responsive to feature requests and just general help.
- * [yellows8](https://github.com/yellows8) for his home menu extdump tool, which was invaluable in debugging.
- * [MrCheeze](https://github.com/MrCheeze) and [AntiMach](https://github.com/AntiMach) whose GYTB and ABE code served as a reference on badge management
- * [Tobid7](https://github.com/tobid7) whose BCSTM-Player project served as a reference on the BCSTM format
- * The folks on #dev of Nintendo Homebrew, who helped with unicode shenanigans (especially [Stary2001](https://github.com/Stary2001), [Fenrir](https://github.com/FenrirWolf), and DanielKO).
- * The maintainers for all used libraries, including but not limited to ctrulib, libarchive, citro3d, citro2d, and quirc. An especially big thanks to the devkitPro team for maintaining a phenomenal toolchain.
- * All the people who helped keep me going and motivated me to work. This includes, but is definitely not limited to:
- 
-   + The members of the [Nintendo Homebrew Discord](https://discord.gg/C29hYvh)
-   + The members of the __Secret Shack Service Discord__   
-   + The members of the [ThemePlaza Discord](https://discord.gg/2hUQwXz)
+You need [devkitPro](https://devkitpro.org/wiki/Getting_Started) with devkitARM and these packages:
+
+```sh
+dkp-pacman -S 3ds-dev 3ds-curl 3ds-mbedtls 3ds-jansson 3ds-libpng 3ds-zlib
+```
+
+and [makerom](https://github.com/3DSGuy/Project_CTR) and [bannertool](https://github.com/diasurgical/bannertool) on
+your `PATH`. Then:
+
+```sh
+make          # out/Themezer.3dsx and out/Themezer.cia
+make test     # unit tests, on your computer
+make send     # sends the 3dsx to a 3DS waiting in the Homebrew Launcher (Y)
+```
+
+## License
+
+Themezer-3DS is free software: you can redistribute it and/or modify it under the terms of the
+[GNU General Public License](LICENSE), version 3 or (at your option) any later version. Anemone3DS, which it is a fork
+of, is licensed the same way.
+
+The libraries the app is built with keep their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The app shows these notices on its About screen.
+
+## Credits
+
+Themezer-3DS exists thanks to Anemone3DS and everyone who made it: Alex Taber
+([@astronautlevel2](https://github.com/astronautlevel2)) and the [Anemone3DS contributors](CONTRIBUTORS.md).
+
+The file formats the app works with were documented by others before it:
+
+- [3dbrew](https://www.3dbrew.org), for the HOME Menu's theme, badge and extdata formats.
+- [yellows8](https://github.com/yellows8)'s [3ds_homemenu_extdatatool](https://github.com/yellows8/3ds_homemenu_extdatatool),
+  for the theme cache.
+- [MrCheeze](https://github.com/MrCheeze)'s [GYTB](https://github.com/MrCheeze/GYTB) and
+  [AntiMach](https://github.com/AntiMach)'s [Advanced Badge Editor](https://github.com/AntiMach/advanced-badge-editor),
+  for the badge files.
+- [Luma3DS](https://github.com/LumaTeam/Luma3DS), for its splash screens.
+
+The banner, boot animation, tune and background music are Themezer's own; [meta/README.md](meta/README.md) describes
+how they were made.

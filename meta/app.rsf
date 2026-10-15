@@ -125,42 +125,27 @@ AccessControlInfo:
     WaitSynchronization1: 36
     WaitSynchronizationN: 37
   InterruptNumbers:
-  ServiceAccessControl: 
+  ServiceAccessControl:
    - APT:U
-   - $hioFIO
-   - $hostio0
-   - $hostio1
    - ac:u
-   - boss:U
+   - act:u
+   - am:app
+   - am:u
    - cam:u
-   - cecd:u
    - cfg:u
-   - dlp:FKCL
-   - dlp:SRVR
    - dsp::DSP
-   - frd:u
    - fs:USER
    - gsp::Gpu
-   - hid:USER
-   - http:C
-   - mic:u
-   - ndm:u
-   - news:s
-   - nwm::UDS
-   - ptm:u
-   - pxi:dev
-   - soc:U
    - gsp::Lcd
-   - y2r:u
-   - ldr:ro
-   - ir:USER
-   - ir:u
-   - csnd:SND
-   - am:u
+   - hid:USER
+   - mcu::HWC
+   - ndm:u
    - ns:s
    - ptm:sysm
-   - mcu::HWC
-   
+   - ptm:u
+   - soc:U
+   - y2r:u
+
 SystemControlInfo:
   Dependency: 
     ac: 0x0004013000002402L
