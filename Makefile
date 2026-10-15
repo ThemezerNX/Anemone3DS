@@ -6,6 +6,7 @@
 #   make cia        only the cia
 #   make test       build and run the unit tests on this computer
 #   make send       send the 3dsx to a console waiting in the Homebrew Launcher
+#   make update-certs  replace romfs/cacert.pem with curl's latest copy of Mozilla's CA list
 #   make clean
 #
 # VERSION=x.y.z overrides the version, which otherwise comes from the git tag on
@@ -14,11 +15,13 @@
 .SUFFIXES:
 .DELETE_ON_ERROR:
 
+# the unit tests are built for this computer and don't need devkitARM
+ifneq ($(filter-out test update-certs,$(or $(MAKECMDGOALS),all)),)
 ifeq ($(strip $(DEVKITARM)),)
 $(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
 endif
-
 include $(DEVKITARM)/3ds_rules
+endif
 
 #---------------------------------------------------------------------------------
 # The app
@@ -68,18 +71,19 @@ VERSION_MICRO := $(or $(word 3,$(subst ., ,$(VERSION_CORE))),0)
 ARCH     := -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
 PKGS     := libcurl jansson libpng zlib
+PKGCONFIG:= $(wildcard $(PORTLIBS)/bin/arm-none-eabi-pkg-config)
 INCLUDE  := $(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
             -I$(CURDIR)/$(BUILD)/gen \
             -I$(CTRULIB)/include -I$(PORTLIBS)/include \
-            $(shell $(PORTLIBS)/bin/arm-none-eabi-pkg-config --cflags-only-I $(PKGS))
+            $(if $(PKGCONFIG),$(shell $(PKGCONFIG) --cflags-only-I $(PKGS)))
 
 DEFINES  := -D__3DS__ \
             -DAPP_TITLE='"$(APP_TITLE)"' \
             -DAPP_VERSION='"$(VERSION)"' \
             -DUPDATE_URL='"$(UPDATE_URL)"' \
-            $(shell $(PORTLIBS)/bin/arm-none-eabi-pkg-config --cflags-only-other $(PKGS))
+            $(if $(PKGCONFIG),$(shell $(PKGCONFIG) --cflags-only-other $(PKGS)))
 
-WARNINGS := -Wall -Wextra -Wno-missing-field-initializers
+WARNINGS := -Wall -Wextra -Wno-missing-field-initializers -Wno-psabi
 
 CFLAGS   := -g -O2 -mword-relocations -ffunction-sections -fdata-sections \
             $(ARCH) $(DEFINES) $(INCLUDE) $(WARNINGS)
@@ -87,7 +91,7 @@ CXXFLAGS := $(CFLAGS) -std=gnu++23 -fno-rtti -fno-exceptions
 ASFLAGS  := -g $(ARCH)
 LDFLAGS  := -specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(BUILD)/$(TARGET).map -Wl,--gc-sections
 
-LIBS     := $(shell $(PORTLIBS)/bin/arm-none-eabi-pkg-config --libs $(PKGS)) -lcitro2d -lcitro3d -lctru -lm
+LIBS     := $(if $(PKGCONFIG),$(shell $(PKGCONFIG) --libs $(PKGS))) -lcitro2d -lcitro3d -lctru -lm
 LIBPATHS := -L$(CTRULIB)/lib -L$(PORTLIBS)/lib
 
 #---------------------------------------------------------------------------------
@@ -113,7 +117,7 @@ CIA      := $(OUT)/$(TARGET).cia
 MAKEROM    ?= makerom
 BANNERTOOL ?= bannertool
 
-.PHONY: all 3dsx cia test send clean
+.PHONY: all 3dsx cia test send clean update-certs
 
 all: 3dsx cia
 
@@ -135,6 +139,9 @@ $(BUILD)/%.o: %.c
 	@mkdir -p $(dir $@)
 	@echo $<
 	@$(CC) -MMD -MP -MF $(BUILD)/$*.d $(CFLAGS) -std=gnu17 -c $< -o $@
+
+# code from elsewhere is kept as it is, warnings and all
+$(BUILD)/third_party/%.o: CFLAGS += -w
 
 $(ROMFS)/gfx/%.t3x $(BUILD)/gen/%.h: $(GFX)/%.t3s
 	@mkdir -p $(ROMFS)/gfx $(BUILD)/gen
@@ -182,15 +189,30 @@ $(CIA): $(ELF) $(BUILD)/banner.bnr $(BUILD)/icon.icn $(META)/app.rsf $(META)/log
 # Unit tests, built for this computer
 #---------------------------------------------------------------------------------
 HOST_CXX      ?= c++
+# libpng and zlib for the computer: from pkg-config, or Homebrew's prefix
+HOST_PKG      := $(shell pkg-config --cflags --libs libpng zlib 2>/dev/null)
+ifeq ($(strip $(HOST_PKG)),)
+  HOST_PREFIX := $(firstword $(wildcard /opt/homebrew /usr/local))
+  HOST_PKG    := -I$(HOST_PREFIX)/include -L$(HOST_PREFIX)/lib -lpng -lz
+endif
 HOST_CXXFLAGS := -std=c++23 -g -O1 -Wall -Wextra -Wno-missing-field-initializers \
-                 -fsanitize=address,undefined -Isource -Itests $(shell pkg-config --cflags zlib libpng 2>/dev/null)
-HOST_LIBS     := $(shell pkg-config --libs zlib libpng 2>/dev/null || echo -lz -lpng)
-HOST_SOURCES  := $(shell find tests -name '*.cpp' 2>/dev/null) $(shell find source/core -name '*.cpp' 2>/dev/null)
+                 -fsanitize=address,undefined -Isource -Itests
+HOST_SOURCES  := $(shell find tests source/core source/domain -name "*.cpp" 2>/dev/null)
 
 test:
 	@mkdir -p $(BUILD)/host
-	@$(HOST_CXX) $(HOST_CXXFLAGS) $(HOST_SOURCES) $(HOST_LIBS) -o $(BUILD)/host/tests
+	@$(HOST_CXX) $(HOST_CXXFLAGS) $(HOST_SOURCES) $(HOST_PKG) -o $(BUILD)/host/tests
 	@$(BUILD)/host/tests
+
+#---------------------------------------------------------------------------------
+# The CA certificates HTTPS is checked against. The app stops checking once its copy is three years old (the app has
+# not been updated for that long), so a build should always carry a fresh one; the release workflow fetches it too.
+update-certs:
+	@curl -fsSL --retry 3 -o $(BUILD)/cacert.pem https://curl.se/ca/cacert.pem --create-dirs
+	@curl -fsSL --retry 3 -o $(BUILD)/cacert.pem.sha256 https://curl.se/ca/cacert.pem.sha256
+	@cd $(BUILD) && shasum -a 256 -c cacert.pem.sha256
+	@mv $(BUILD)/cacert.pem $(ROMFS)/cacert.pem
+	@grep -m1 'as of:' $(ROMFS)/cacert.pem
 
 #---------------------------------------------------------------------------------
 send: $(3DSX)
