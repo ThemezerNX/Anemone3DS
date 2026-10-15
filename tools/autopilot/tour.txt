@@ -1,0 +1,58 @@
+# A walk past the app's screens, looking only: nothing is installed or deleted.
+#   make DEVTOOLS=1 3dsx && tools/autopilot.sh tools/autopilot/tour.txt
+
+wait 240                # the libraries load
+touch 60 15             # the Themes tab, wherever the app was last time
+wait 30
+shot themes
+press DOWN
+wait 40
+shot themes-second
+press A                 # the theme's actions
+wait 30
+shot actions
+press B
+wait 30
+press X                 # two themes picked for a shuffle
+press DOWN
+press X
+wait 20
+shot shuffle-picks
+press B                 # and the picks cleared again
+press Y
+wait 90
+shot preview
+press B
+wait 30
+press R
+wait 90
+shot splashes
+press R
+wait 90
+shot badges
+press R
+wait 300                # the first page from themezer.net
+shot themezer
+press START
+wait 30
+shot menu
+press DOWN
+press DOWN
+press DOWN
+press A                 # Settings
+wait 30
+shot settings
+press B
+wait 20
+press START
+wait 20
+press DOWN
+press DOWN
+press DOWN
+press DOWN
+press A                 # About
+wait 30
+shot about
+press B
+wait 20
+quit

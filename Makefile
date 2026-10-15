@@ -6,11 +6,14 @@
 #   make cia        only the cia
 #   make test       build and run the unit tests on this computer
 #   make send       send the 3dsx to a console waiting in the Homebrew Launcher
+#   make preview    open the 3dsx in the Azahar emulator
 #   make update-certs  replace romfs/cacert.pem with curl's latest copy of Mozilla's CA list
 #   make clean
 #
 # VERSION=x.y.z overrides the version, which otherwise comes from the git tag on
 # HEAD (vX.Y.Z), or BASE_VERSION plus the commit for untagged builds.
+# DEVTOOLS=1 builds in the autopilot (docs/DEVELOPMENT.md), apart from the normal
+# build: in build/dev and out/dev.
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 .DELETE_ON_ERROR:
@@ -39,6 +42,10 @@ BASE_VERSION     := 4.0.0
 TARGET   := Themezer
 BUILD    := build
 OUT      := out
+ifeq ($(DEVTOOLS),1)
+  BUILD  := build/dev
+  OUT    := out/dev
+endif
 SOURCES  := source third_party/quirc
 INCLUDES := source third_party
 ROMFS    := romfs
@@ -81,6 +88,7 @@ DEFINES  := -D__3DS__ \
             -DAPP_TITLE='"$(APP_TITLE)"' \
             -DAPP_VERSION='"$(VERSION)"' \
             -DUPDATE_URL='"$(UPDATE_URL)"' \
+            $(if $(filter 1,$(DEVTOOLS)),-DTZ_DEVTOOLS) \
             $(if $(PKGCONFIG),$(shell $(PKGCONFIG) --cflags-only-other $(PKGS)))
 
 WARNINGS := -Wall -Wextra -Wno-missing-field-initializers -Wno-psabi
@@ -117,7 +125,7 @@ CIA      := $(OUT)/$(TARGET).cia
 MAKEROM    ?= makerom
 BANNERTOOL ?= bannertool
 
-.PHONY: all 3dsx cia test send clean update-certs
+.PHONY: all 3dsx cia test send preview clean update-certs
 
 all: 3dsx cia
 
@@ -217,6 +225,18 @@ update-certs:
 #---------------------------------------------------------------------------------
 send: $(3DSX)
 	@3dslink $(if $(THREEDS_IP),-a $(THREEDS_IP)) $(3DSX)
+
+# Azahar from https://azahar-emu.org: on a Mac the app, opened by name; elsewhere the azahar command.
+# AZAHAR=<path> when it's somewhere else.
+ifeq ($(shell uname),Darwin)
+AZAHAR ?= Azahar
+preview: $(3DSX)
+	@open -n -a "$(AZAHAR)" --args "$(CURDIR)/$(3DSX)"
+else
+AZAHAR ?= azahar
+preview: $(3DSX)
+	@"$(AZAHAR)" "$(CURDIR)/$(3DSX)" > /dev/null 2>&1 &
+endif
 
 clean:
 	@echo clean ...

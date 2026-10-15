@@ -31,7 +31,11 @@ your `PATH`. Then:
 make          # out/Themezer.3dsx and out/Themezer.cia
 make test     # unit tests, on your computer
 make send     # sends the 3dsx to a 3DS waiting in the Homebrew Launcher (Y)
+make preview  # opens the 3dsx in the Azahar emulator
 ```
+
+[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) has more: trying the app in an emulator, and the autopilot that walks
+through its screens and takes screenshots.
 
 ## License
 
